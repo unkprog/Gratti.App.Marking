@@ -32,7 +32,12 @@ namespace Gratti.App.Marking.Views.Controls
 
         private void EnterButton_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.SaveProfiles();
+            string msg = ViewModel.SaveProfiles();
+            if (!string.IsNullOrEmpty(msg))
+            {
+                MessageBox.Show(msg, "Вход в систему", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             //LogWindow lw = new LogWindow();
             //lw.Show();
         }

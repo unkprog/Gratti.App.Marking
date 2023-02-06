@@ -18,7 +18,31 @@ namespace Gratti.App.Marking.Utils
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    if (ExistsOid(certificate, "1.2.643.100.111"))
+                    //if (ExistsOid(certificate, "1.2.643.100.111"))
+                    {
+                        result.Add(new CertificateInfoModel()
+                        {
+                            SerialNumber = certificate.SerialNumber,
+                            Name = GetName(certificate),
+                            INN = GetINN(certificate),
+                            NotAfter = certificate.NotAfter,
+
+                        });
+                    }
+                }
+            }
+            return result;
+        }
+
+        internal static ObservableCollection<CertificateInfoModel> GetCertificatesList()
+        {
+            ObservableCollection<CertificateInfoModel> result = new ObservableCollection<CertificateInfoModel>();
+            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            {
+                store.Open(OpenFlags.ReadOnly);
+                foreach (X509Certificate2 certificate in store.Certificates)
+                {
+                    //if (ExistsOid(certificate, "1.2.643.100.111"))
                     {
                         result.Add(new CertificateInfoModel()
                         {

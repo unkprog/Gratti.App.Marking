@@ -1,4 +1,5 @@
-﻿using Gratti.App.Marking.Views.Models;
+﻿using Gratti.App.Marking.Services;
+using Gratti.App.Marking.Views.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -18,6 +19,8 @@ namespace Gratti.App.Marking
         public static class State
         {
             public static MainWindowViewModel MainVM { get; set; }
+
+            public static AuthService Auth { get; } = new AuthService();
         }
     }
 }

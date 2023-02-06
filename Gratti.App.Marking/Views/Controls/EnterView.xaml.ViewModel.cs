@@ -118,7 +118,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
 
             var appendResult = new Action<string>((msg) =>
             {
-                result = string.Concat(result, string.IsNullOrEmpty(result) ? Environment.NewLine : string.Empty, msg);
+                result = string.Concat(result, string.IsNullOrEmpty(result) ? string.Empty : Environment.NewLine, msg);
             });
 
             if (string.IsNullOrEmpty(CurrentProfile.SerialNumber))
