@@ -11,17 +11,20 @@ using Gratti.Marking.Extensions;
 using System.Text.Json.Serialization;
 using System.Text;
 using System.Security.Cryptography.Pkcs;
+using Gratti.App.Marking.Core.Interfaces;
 
 namespace Gratti.App.Marking.Services
 {
     public class AuthService
     {
-        public AuthService(ProfileInfoModel profile)
+        public AuthService(ProfileInfoModel profile, ILoggerOutput logger)
         {
             this.profile = profile;
+            this.logger = logger;
         }
 
-        ProfileInfoModel profile;
+        private ILoggerOutput logger;
+        private ProfileInfoModel profile;
         private TokenAuthModel omsToken = null;
         public string OmsToken { get => getOmsToken(); }
 
@@ -89,32 +92,19 @@ namespace Gratti.App.Marking.Services
             return result;
         }
 
-        public void Connect(Action<string> trace)
+        public void Connect()
         {
+            logger?.Log("Получение токена...");
             TokenModel tokenResponse = GetTokenResponse();
 
-            trace?.Invoke("Выбор сертификата для авторизации...");
-            X509Certificate2 cert = Utils.Certificate. App.GetCertificate(trace);
+            logger?.Log("Выбор сертификата для авторизации...");
+            X509Certificate2 cert = Utils.Certificate.GetCertificate(profile.SerialNumber);
 
-            //trace?.Invoke("Подписывание токена для авторизации...");
-            //// данные для подписи
-            //var content = new ContentInfo(Encoding.UTF8.GetBytes(tokenResponse.Data));
-            //var signedCms = new SignedCms(content, false);
+            logger?.Log("Авторизация...");
 
-            //// настраиваем сертификат для подлиси, добавляем дату
-            //var signer = new CmsSigner(SubjectIdentifierType.IssuerAndSerialNumber, cert);
-            //signer.SignedAttributes.Add(new Pkcs9SigningTime(DateTime.Now));
+            omsToken = Connect(cert, tokenResponse);
 
-            //// формируем подпись
-            //signedCms.ComputeSignature(signer, false);
-            //byte[] sign = signedCms.Encode();
-
-            trace?.Invoke("Авторизация...");
-            // TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Convert.ToBase64String(sign) };
-
-            State.TokenAuth = Connect(cert, tokenResponse);
-
-            trace?.Invoke("Token: " + State.TokenAuth?.Token + "...");
+            logger?.Log("Token: " + omsToken.Token + "...");
         }
 
     }

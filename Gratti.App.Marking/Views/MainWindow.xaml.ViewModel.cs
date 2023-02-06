@@ -1,10 +1,10 @@
-﻿using Gratti.App.Marking.Views.Models;
+﻿using Gratti.Marking.Extensions;
+using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.Reactive;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Gratti.App.Marking.Views.Models
 {
@@ -12,8 +12,43 @@ namespace Gratti.App.Marking.Views.Models
     {
         public MainWindowViewModel()
         {
-            App.State.MainVM = this;
+            App.Self.MainVM = this;
             Content = new Controls.EnterView();
+        }
+
+        private Visibility visibilityBusy = Visibility.Collapsed;
+        public Visibility VisibilityBusy
+        {
+            get { return visibilityBusy; }
+            set { this.RaiseAndSetIfChanged(ref visibilityBusy, value); }
+        }
+        
+
+        public void Busy(bool aIsShow)
+        {
+            VisibilityBusy = (aIsShow ? Visibility.Visible : Visibility.Collapsed);
+        }
+        public void Error(string errorMessage, string aTitle = "Гратти.Маркировка")
+        {
+            MessageBox.Show(errorMessage, aTitle, MessageBoxButton.OK, MessageBoxImage.Error);
+            return;
+        }
+
+        public void Run(Action action)
+        {
+            if (action != null)
+            {
+                Busy(true);
+                Task.Run(() =>
+                {
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        TryCatch.Invoke(action, (error) => this.Log(error));
+                        Busy(false);
+                    });
+                });
+
+            }
         }
     }
 }

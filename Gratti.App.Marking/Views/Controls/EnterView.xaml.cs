@@ -1,4 +1,5 @@
-﻿using Gratti.App.Marking.Views.Controls.Models;
+﻿using Gratti.App.Marking.Model;
+using Gratti.App.Marking.Views.Controls.Models;
 using Gratti.App.Marking.Views.Models;
 using System;
 using System.Collections.Generic;
@@ -32,14 +33,21 @@ namespace Gratti.App.Marking.Views.Controls
 
         private void EnterButton_Click(object sender, RoutedEventArgs e)
         {
-            string msg = ViewModel.SaveProfiles();
-            if (!string.IsNullOrEmpty(msg))
+            string errorMessage = ViewModel.SaveProfiles();
+            if (!string.IsNullOrEmpty(errorMessage))
             {
-                MessageBox.Show(msg, "Вход в систему", MessageBoxButton.OK, MessageBoxImage.Error);
+                App.Self.MainVM.Error(errorMessage, "Вход в систему");
                 return;
             }
-            //LogWindow lw = new LogWindow();
-            //lw.Show();
+
+            App.Self.MainVM.Run(() =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    App.Self.SetProfile(ViewModel.CurrentProfile);
+                    App.Self.Auth.Connect();
+                });
+            });
         }
     }
 }

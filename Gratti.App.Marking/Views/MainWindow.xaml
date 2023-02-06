@@ -30,5 +30,18 @@
             <Button Name="logButton" Margin="3 0 0 0 " Click="logButton_Click">Log</Button>
         </Grid>
 
+        <Grid Grid.RowSpan="2" Visibility="{Binding VisibilityBusy, Mode=TwoWay}" Background="#AF000000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ProgressBar Grid.Row="1" Grid.Column="1" Width="200" Height="20" IsIndeterminate="True"/>
+        </Grid>
     </Grid>
 </Window>

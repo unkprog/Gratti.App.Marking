@@ -18,7 +18,7 @@ namespace Gratti.App.Marking.Utils
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    //if (ExistsOid(certificate, "1.2.643.100.111"))
+                    if (ExistsOid(certificate, "1.2.643.100.111"))
                     {
                         result.Add(new CertificateInfoModel()
                         {
@@ -34,24 +34,18 @@ namespace Gratti.App.Marking.Utils
             return result;
         }
 
-        internal static ObservableCollection<CertificateInfoModel> GetCertificatesList()
+        internal static X509Certificate2 GetCertificate(string serialNumber)
         {
-            ObservableCollection<CertificateInfoModel> result = new ObservableCollection<CertificateInfoModel>();
+            X509Certificate2 result = null;
             using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    //if (ExistsOid(certificate, "1.2.643.100.111"))
+                    if (certificate.SerialNumber == serialNumber)
                     {
-                        result.Add(new CertificateInfoModel()
-                        {
-                            SerialNumber = certificate.SerialNumber,
-                            Name = GetName(certificate),
-                            INN = GetINN(certificate),
-                            NotAfter = certificate.NotAfter,
-
-                        });
+                        result = certificate;
+                        break;
                     }
                 }
             }
