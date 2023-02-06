@@ -1,13 +1,14 @@
-﻿using Gratti.App.Marking.Model;
-using Gratti.App.Marking.Utils;
-using Gratti.App.Marking.Views.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+using Gratti.App.Marking.Model;
+using Gratti.App.Marking.Utils;
+using Gratti.App.Marking.Views.Models;
+using ReactiveUI;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -15,17 +16,35 @@ namespace Gratti.App.Marking.Views.Controls.Models
     {
         public EnterViewModel()
         {
-            loadProfiles();
+            LoadProfiles();
         }
 
         public ObservableCollection<ProfileInfoModel> Profiles { get; private set; } = new ObservableCollection<ProfileInfoModel>();
 
-        public ProfileInfoModel CurrentProfile { get; set; }
 
+        private ProfileInfoModel currentProfile;
+        public ProfileInfoModel CurrentProfile
+        {
+            get => currentProfile;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref currentProfile, value);
+                CurrentCertificate = Certificates.FirstOrDefault(f => f.SerialNumber == currentProfile.SerialNumber);
+            }
+        }
 
         public ObservableCollection<CertificateInfoModel> Certificates { get; private set; } = Utils.Certificate.GetCertificatesList();
 
-        public CertificateInfoModel CurrentCertificate { get; set; }
+        private CertificateInfoModel currentCertificate;
+        public CertificateInfoModel CurrentCertificate
+        {
+            get => currentCertificate;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref currentCertificate, value);
+                CurrentProfile.SerialNumber = currentCertificate?.SerialNumber;
+            }
+        }
 
         public string OmsId
         {
@@ -47,30 +66,44 @@ namespace Gratti.App.Marking.Views.Controls.Models
             }
         }
 
-        private void loadProfiles()
+        public void LoadProfiles()
         {
-            ProfileInfoModel profileDev = new ProfileInfoModel
+            string fileSettingsPath = IO.GetFileSettingsPath();
+
+            SettingModel setting = null;
+            if (File.Exists(fileSettingsPath))
             {
-                Name = "Тестовый сервер (https://markirovka.sandbox.crptech.ru)",
-                GisUri = "https://markirovka.sandbox.crptech.ru",
-                OmsUri = "https://suz.sandbox.crptech.ru",
-            };
-
-
-            ProfileInfoModel profileProd = new ProfileInfoModel
+                string json = File.ReadAllText(fileSettingsPath);
+                setting = JsonSerializer.Deserialize<SettingModel>(json);
+            }
+            if (setting == null)
             {
-                Name = "Основной сервер (https://markirovka.crpt.ru)",
-                GisUri = "https://markirovka.crpt.ru",
-                OmsUri = "https://suzgrid.crpt.ru",
-            };
 
-            Profiles.Add(profileDev);
-            Profiles.Add(profileProd);
+                setting = new SettingModel()
+                {
+                    Dev = new ProfileInfoModel
+                    {
+                        Name = "Тестовый сервер (https://markirovka.sandbox.crptech.ru)",
+                        GisUri = "https://markirovka.sandbox.crptech.ru",
+                        OmsUri = "https://suz.sandbox.crptech.ru",
+                    },
+                    Prod = new ProfileInfoModel
+                    {
+                        Name = "Основной сервер (https://markirovka.crpt.ru)",
+                        GisUri = "https://markirovka.crpt.ru",
+                        OmsUri = "https://suzgrid.crpt.ru",
+                    },
+                    Current = "Dev"
+                };
+            }
 
-            CurrentProfile = profileProd;
+            Profiles.Add(setting.Dev);
+            Profiles.Add(setting.Prod);
+
+            CurrentProfile = (setting.Current == "Dev" ? setting.Dev: setting.Prod);
         }
 
-        public string saveProfiles()
+        public string SaveProfiles()
         {
             string result = string.Empty;
 
@@ -83,13 +116,21 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 Current = (CurrentProfile == Profiles[0] ? "Dev" : "Prod")
             };
 
-            if (string.IsNullOrEmpty(CurrentProfile.OmsId))
+            var appendResult = new Action<string>((msg) =>
             {
+                result = string.Concat(result, string.IsNullOrEmpty(result) ? Environment.NewLine : string.Empty, msg);
+            });
 
-            }
+            if (string.IsNullOrEmpty(CurrentProfile.SerialNumber))
+                appendResult("Выберите сертификат");
+            if (string.IsNullOrEmpty(CurrentProfile.OmsId))
+                appendResult("Укажите идентификатор СУЗ (Oms Id)");
+            if (string.IsNullOrEmpty(CurrentProfile.ConnectionId))
+                appendResult("Укажите идентификатор подключения (Connection Id)");
 
-            File.WriteAllText(fileSettingsPath, setting.ToString());
-
+            JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic);
+            string json = JsonSerializer.Serialize(setting, new JsonSerializerOptions { WriteIndented = true, Encoder = encoder });
+            File.WriteAllText(fileSettingsPath, json);
             return result;
         }
     }

@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace Grattim.App.Marking.ViewModel
+namespace Gratti.App.Marking.Views.Models
 {
     public class BaseViewModel : ReactiveObject
     {

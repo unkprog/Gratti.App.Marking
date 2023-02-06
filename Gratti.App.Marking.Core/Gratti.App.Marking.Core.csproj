@@ -76,6 +76,7 @@
     <Compile Include="Extensions\Object.cs" />
     <Compile Include="Extensions\String.cs" />
     <Compile Include="Extensions\TryCatch.cs" />
+    <Compile Include="Interfaces\ILoggerOutput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gratti.App.Marking.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gratti.App.Marking.Model", "Gratti.App.Marking.Model\Gratti.App.Marking.Model.csproj", "{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grattim.App.Marking.ViewModel", "Grattim.App.Marking.ViewModel\Grattim.App.Marking.ViewModel.csproj", "{1C692B55-5BE6-4F10-AAF6-B27B86AED7BC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1C692B55-5BE6-4F10-AAF6-B27B86AED7BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1C692B55-5BE6-4F10-AAF6-B27B86AED7BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1C692B55-5BE6-4F10-AAF6-B27B86AED7BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1C692B55-5BE6-4F10-AAF6-B27B86AED7BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

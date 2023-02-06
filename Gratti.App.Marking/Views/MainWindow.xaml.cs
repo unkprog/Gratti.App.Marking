@@ -1,4 +1,5 @@
-﻿using Gratti.App.Marking.Views.Models;
+﻿using Gratti.App.Marking.Views.Controls.Models;
+using Gratti.App.Marking.Views.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,11 +25,10 @@ namespace Gratti.App.Marking.Views
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
-            viewModel.Write("MainWindow");
+            ViewModel.Log("MainWindow");
         }
 
-        MainWindowViewModel viewModel = new MainWindowViewModel();
+        MainWindowViewModel ViewModel => (this.DataContext as MainWindowViewModel);
 
         private void logButton_Click(object sender, RoutedEventArgs e)
         {

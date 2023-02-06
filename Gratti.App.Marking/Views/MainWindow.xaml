@@ -4,18 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Gratti.App.Marking"
-        xmlns:viewsCtrl="clr-namespace:Gratti.App.Marking.Views.Controls"
+        xmlns:vm="clr-namespace:Gratti.App.Marking.Views.Models"      
         mc:Ignorable="d"
-        Title="MainWindow" Width="1024" Height="768">
+        Title="MainWindow" Width="1024" Height="768" WindowStartupLocation="CenterScreen" Icon="/logo.png">
+    <Window.Resources>
+        <vm:MainWindowViewModel x:Key="MainWindowVM"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <Binding Source="{StaticResource MainWindowVM}"/>
+    </Window.DataContext>
+    
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <viewsCtrl:EnterView>
-            
-        </viewsCtrl:EnterView>
-
+        <ContentControl Content="{Binding Content}" />
+        
         <Grid Grid.Row="1" Background="Silver">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>

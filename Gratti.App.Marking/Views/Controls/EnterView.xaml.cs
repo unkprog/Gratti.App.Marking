@@ -25,14 +25,14 @@ namespace Gratti.App.Marking.Views.Controls
         public EnterView()
         {
             InitializeComponent();
-            this.DataContext = viewModel;
-            viewModel.Write("EnterView");
+            ViewModel.Log("EnterView");
         }
 
-        EnterViewModel viewModel = new EnterViewModel();
+        EnterViewModel ViewModel => (this.DataContext as EnterViewModel);
 
         private void EnterButton_Click(object sender, RoutedEventArgs e)
         {
+            ViewModel.SaveProfiles();
             //LogWindow lw = new LogWindow();
             //lw.Show();
         }

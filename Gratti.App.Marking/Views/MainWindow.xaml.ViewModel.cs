@@ -8,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace Gratti.App.Marking.Views.Models
 {
-    public class MainWindowViewModel : LogViewModel
+    public class MainWindowViewModel : ContentViewModel
     {
         public MainWindowViewModel()
         {
+            App.State.MainVM = this;
+            Content = new Controls.EnterView();
         }
     }
 }
