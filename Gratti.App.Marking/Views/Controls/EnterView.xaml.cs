@@ -46,6 +46,7 @@ namespace Gratti.App.Marking.Views.Controls
                 {
                     App.Self.SetProfile(ViewModel.CurrentProfile);
                     App.Self.Auth.Connect();
+                    App.Self.MainVM.Content = new Oms.OrdersView();
                 });
             });
         }

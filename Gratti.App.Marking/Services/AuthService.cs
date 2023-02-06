@@ -26,7 +26,7 @@ namespace Gratti.App.Marking.Services
         private ILoggerOutput logger;
         private ProfileInfoModel profile;
         private TokenAuthModel omsToken = null;
-        public string OmsToken { get => getOmsToken(); }
+        public string OmsToken { get { return getOmsToken(); } }
 
 
         public string getOmsToken()
@@ -55,7 +55,7 @@ namespace Gratti.App.Marking.Services
         {
             TokenModel result = null;
 
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/key"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -82,11 +82,11 @@ namespace Gratti.App.Marking.Services
             TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Convert.ToBase64String(sign) };
 
             TokenAuthModel result = null;
-            using (HttpClient client = GetHttpClient())
+            using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(string.Concat(profile.GisUri));
+                client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                result = client.PostJson<TokenModel, TokenAuthModel>("/api/v3/auth/cert", tokenRequest);
+                result = client.PostJson<TokenModel, TokenAuthModel>("", tokenRequest);
             }
 
             return result;
@@ -96,6 +96,7 @@ namespace Gratti.App.Marking.Services
         {
             logger?.Log("Получение токена...");
             TokenModel tokenResponse = GetTokenResponse();
+            logger?.Log("Токен для авторизации получен (UUID: " + tokenResponse.UUID + ", Data:" + tokenResponse.Data + ")...");
 
             logger?.Log("Выбор сертификата для авторизации...");
             X509Certificate2 cert = Utils.Certificate.GetCertificate(profile.SerialNumber);

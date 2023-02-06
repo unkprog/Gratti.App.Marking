@@ -25,7 +25,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
         private ProfileInfoModel currentProfile;
         public ProfileInfoModel CurrentProfile
         {
-            get => currentProfile;
+            get { return currentProfile; }
             set
             {
                 this.RaiseAndSetIfChanged(ref currentProfile, value);
@@ -38,7 +38,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
         private CertificateInfoModel currentCertificate;
         public CertificateInfoModel CurrentCertificate
         {
-            get => currentCertificate;
+            get { return currentCertificate; }
             set
             {
                 this.RaiseAndSetIfChanged(ref currentCertificate, value);
@@ -48,7 +48,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
 
         public string OmsId
         {
-            get => CurrentProfile.OmsId;
+            get { return CurrentProfile.OmsId; }
             set
             {
                 if (CurrentProfile != null)
@@ -58,7 +58,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
 
         public string ConnectionId
         {
-            get => CurrentProfile?.ConnectionId; 
+            get { return CurrentProfile?.ConnectionId; }
             set
             {
                 if (CurrentProfile != null)
