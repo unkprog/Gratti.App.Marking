@@ -18,7 +18,7 @@ namespace Gratti.App.Marking.Utils
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    //if (ExistsOid(certificate, "1.2.643.100.111"))
+                    if (ExistsOid(certificate, "1.2.643.100.111"))
                     {
                         result.Add(new CertificateInfoModel()
                         {
