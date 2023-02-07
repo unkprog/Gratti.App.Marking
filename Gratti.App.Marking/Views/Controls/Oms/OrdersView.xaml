@@ -11,6 +11,23 @@
         <vm:OrdersViewModel/>
     </UserControl.DataContext>    
     <Grid>
-            
+        <DataGrid x:Name="OrdersDataGrid" ItemsSource="{Binding Orders}" IsReadOnly="True" AutoGenerateColumns="False"
+                  AlternatingRowBackground="#FFFFFFAF" HorizontalGridLinesBrush="#FFDFDFDF" VerticalGridLinesBrush="#FFDFDFDF"
+                  RowHeight="24" >
+            <DataGrid.Resources>
+            <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+            </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding CreatedDateTime}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Идентификатор" Binding="{Binding OrderId}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="№ произв. заказа" Binding="{Binding ProductionOrderId}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Кол. товаров" Binding="{Binding TotalBuffers}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Кол. КМ" Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Доступно КМ" Binding="{Binding TotalAvailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding OrderStatusText}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </UserControl>

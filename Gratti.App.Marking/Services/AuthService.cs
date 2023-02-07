@@ -26,17 +26,20 @@ namespace Gratti.App.Marking.Services
         private ILoggerOutput logger;
         private ProfileInfoModel profile;
         private TokenAuthModel omsToken = null;
-        public string OmsToken { get { return getOmsToken(); } }
+
+        public ProfileInfoModel Profile { get { return profile; } }
+        public string OmsToken { get { return GetOmsToken(); } }
 
 
-        public string getOmsToken()
+        public string GetOmsToken()
         {
             if (omsToken == null || ((DateTime.Now - omsToken.Date).TotalHours > 2))
             {
+                Connect();
                //omsToken = Identity?.GetOmsTokenAsync(Certificate, Current.GisUri, ConnId).Result;
             }
 
-            return omsToken.Token;
+            return omsToken?.Token;
         }
 
 
@@ -105,7 +108,7 @@ namespace Gratti.App.Marking.Services
 
             omsToken = Connect(cert, tokenResponse);
 
-            logger?.Log("Token: " + omsToken.Token + "...");
+            logger?.Log("Token получен...");
         }
 
     }

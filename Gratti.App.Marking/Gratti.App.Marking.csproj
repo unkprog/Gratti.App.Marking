@@ -215,6 +215,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Gratti.App.Marking.Api\Gratti.App.Marking.Api.csproj">
+      <Project>{55958821-3FB7-4E81-87F3-F36EB869F1B3}</Project>
+      <Name>Gratti.App.Marking.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gratti.App.Marking.Core\Gratti.App.Marking.Core.csproj">
       <Project>{ae2d587c-6280-4960-b599-17d0a35d6d61}</Project>
       <Name>Gratti.App.Marking.Core</Name>

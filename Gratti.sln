@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gratti.App.Marking.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gratti.App.Marking.Model", "Gratti.App.Marking.Model\Gratti.App.Marking.Model.csproj", "{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gratti.App.Marking.Api", "Gratti.App.Marking.Api\Gratti.App.Marking.Api.csproj", "{55958821-3FB7-4E81-87F3-F36EB869F1B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55958821-3FB7-4E81-87F3-F36EB869F1B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55958821-3FB7-4E81-87F3-F36EB869F1B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55958821-3FB7-4E81-87F3-F36EB869F1B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55958821-3FB7-4E81-87F3-F36EB869F1B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

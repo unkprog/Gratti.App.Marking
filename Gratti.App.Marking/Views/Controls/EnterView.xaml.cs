@@ -1,4 +1,5 @@
-﻿using Gratti.App.Marking.Model;
+﻿using Gratti.App.Marking.Api;
+using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Views.Controls.Models;
 using Gratti.App.Marking.Views.Models;
 using System;
@@ -33,6 +34,8 @@ namespace Gratti.App.Marking.Views.Controls
 
         private void EnterButton_Click(object sender, RoutedEventArgs e)
         {
+            GroupEnum group = GroupEnum.lp;
+            string s = group.ToString();
             string errorMessage = ViewModel.SaveProfiles();
             if (!string.IsNullOrEmpty(errorMessage))
             {

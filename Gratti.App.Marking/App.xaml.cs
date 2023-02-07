@@ -1,4 +1,5 @@
-﻿using Gratti.App.Marking.Model;
+﻿using Gratti.App.Marking.Api;
+using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Services;
 using Gratti.App.Marking.Views.Models;
 using System;
@@ -26,10 +27,12 @@ namespace Gratti.App.Marking
         public MainWindowViewModel MainVM { get; set; }
 
         public AuthService Auth { get; private set; }
+        public Oms OmsApi { get; private set; }
 
         public void SetProfile(ProfileInfoModel profile)
         {
             Auth = new AuthService(profile, MainVM);
+            OmsApi = new Oms(profile.OmsUri, profile.OmsId);
         }
 
     }

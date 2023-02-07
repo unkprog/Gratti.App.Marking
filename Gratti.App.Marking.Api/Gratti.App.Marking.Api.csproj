@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AE2D587C-6280-4960-B599-17D0A35D6D61}</ProjectGuid>
+    <ProjectGuid>{55958821-3FB7-4E81-87F3-F36EB869F1B3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gratti.App.Marking.Core</RootNamespace>
-    <AssemblyName>Gratti.App.Marking.Core</AssemblyName>
+    <RootNamespace>Gratti.App.Marking.Api</RootNamespace>
+    <AssemblyName>Gratti.App.Marking.Api</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -40,7 +40,6 @@
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -71,19 +70,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataMatrix\Encoder.Bitmap.cs" />
-    <Compile Include="DataMatrix\Encoder.cs" />
-    <Compile Include="Extensions\Enum.cs" />
-    <Compile Include="Extensions\HttpClient.cs" />
-    <Compile Include="Extensions\Object.cs" />
-    <Compile Include="Extensions\String.cs" />
-    <Compile Include="Extensions\TryCatch.cs" />
-    <Compile Include="Interfaces\ILoggerOutput.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="Model\BufferInfoModel.cs" />
+    <Compile Include="Model\OrderInfoModel.cs" />
+    <Compile Include="Model\OrderProductInfoModel.cs" />
+    <Compile Include="Model\OrdersModel.cs" />
+    <Compile Include="Model\PoolInfoModel.cs" />
+    <Compile Include="Oms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gratti.App.Marking.Core\Gratti.App.Marking.Core.csproj">
+      <Project>{ae2d587c-6280-4960-b599-17d0a35d6d61}</Project>
+      <Name>Gratti.App.Marking.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
