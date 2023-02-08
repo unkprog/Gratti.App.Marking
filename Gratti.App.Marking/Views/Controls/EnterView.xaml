@@ -72,7 +72,7 @@
             <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding OmsId, Mode=TwoWay}" Height="24" />
             <TextBlock Grid.Row="8" Text="Идент. подключения (Connection Id)"  HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0 0 5 0" />
             <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding ConnectionId, Mode=TwoWay}" Height="24" />
-            <Button Name="EnterButton" Grid.Row="10" Grid.ColumnSpan="2" Width="125" HorizontalAlignment="Right" Click="EnterButton_Click">Войти в систему</Button>
+            <Button Name="EnterButton" Grid.Row="10" Grid.ColumnSpan="2" Width="125" HorizontalAlignment="Right" Command="{Binding EnterCommand}">Войти в систему</Button>
         </Grid>
     </Grid>
 

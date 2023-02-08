@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Gratti.App.Marking.Model;
-using Gratti.Marking.Extensions;
-using System.Text.Json.Serialization;
+using Gratti.App.Marking.Extensions;
 using System.Text;
 using System.Security.Cryptography.Pkcs;
 using Gratti.App.Marking.Core.Interfaces;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Gratti.Marking.Extensions
+namespace Gratti.App.Marking.Extensions
 {
     public static partial class Object
     {

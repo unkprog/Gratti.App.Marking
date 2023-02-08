@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace Gratti.Marking.Core.DataMatrix
+namespace Gratti.App.Marking.Core.DataMatrix
 {
     public partial class Encoder
     {

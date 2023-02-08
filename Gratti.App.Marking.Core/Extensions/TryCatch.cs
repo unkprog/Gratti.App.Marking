@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Gratti.Marking.Extensions
+namespace Gratti.App.Marking.Extensions
 {
     public static class TryCatch
     {

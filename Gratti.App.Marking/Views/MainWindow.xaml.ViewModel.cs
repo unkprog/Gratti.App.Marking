@@ -1,10 +1,8 @@
-﻿using Gratti.Marking.Extensions;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
-using System.Reactive;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
+using Gratti.App.Marking.Extensions;
 
 namespace Gratti.App.Marking.Views.Models
 {

@@ -2,7 +2,7 @@
 using System;
 using System.Text;
 
-namespace Gratti.Marking.Extensions
+namespace Gratti.App.Marking.Extensions
 {
     public static partial class Object
     {

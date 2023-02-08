@@ -1,21 +1,26 @@
 ﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Windows.Markup;
 using Gratti.App.Marking.Api.Model;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Views.Models;
-using Gratti.Marking.Extensions;
+using Gratti.App.Marking.Extensions;
+using System.Reactive;
+using System.Threading.Tasks;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
-    public class OrdersViewModel : LogViewModel
+    public partial class OrdersViewModel : LogViewModel
     {
         public OrdersViewModel()
         {
             OrdersModel ordersResponse = test();
             this.Orders = ordersResponse.Orders;
+
+            PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { Task.Run(PrintAllAvalaibleCurrentOrderInfo); });
         }
+
+        public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
 
         public CertificateInfoModel Certificate { get { return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.SerialNumber); } }
 
@@ -52,6 +57,20 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
         }
 
+        private void PrintAllAvalaibleCurrentOrderInfo()
+        {
+            if (CurrentOrderInfo == null)
+                return;
+            
+            foreach(BufferInfoModel buffer in CurrentOrderInfo.Buffers)
+            {
+                CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
+                foreach(string dmcode in codes.Codes)
+                {
+                    SaveCisTrue( dmcode);
+                }
+            }
+        }
 
         private OrdersModel test()
         {

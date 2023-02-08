@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Gratti.Marking.Extensions
+namespace Gratti.App.Marking.Extensions
 {
     public static class HttpClientExtensions
     {

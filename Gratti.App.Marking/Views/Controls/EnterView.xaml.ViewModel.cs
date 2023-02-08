@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reactive;
+using System.Collections.ObjectModel;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
+using System.Threading.Tasks;
+using System.Windows;
+using ReactiveUI;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Utils;
 using Gratti.App.Marking.Views.Models;
-using ReactiveUI;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -17,7 +20,10 @@ namespace Gratti.App.Marking.Views.Controls.Models
         public EnterViewModel()
         {
             LoadProfiles();
+            EnterCommand = ReactiveCommand.Create(() => { Task.Run(Enter); });
         }
+
+        public ReactiveCommand<Unit, Unit> EnterCommand { get; }
 
         public ObservableCollection<ProfileInfoModel> Profiles { get; private set; } = new ObservableCollection<ProfileInfoModel>();
 
@@ -132,6 +138,26 @@ namespace Gratti.App.Marking.Views.Controls.Models
             string json = JsonSerializer.Serialize(setting, new JsonSerializerOptions { WriteIndented = true, Encoder = encoder });
             File.WriteAllText(fileSettingsPath, json);
             return result;
+        }
+
+        private void Enter()
+        {
+            string errorMessage = SaveProfiles();
+            //if (!string.IsNullOrEmpty(errorMessage))
+            //{
+            //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
+            //    return;
+            //}
+
+            App.Self.MainVM.Run(() =>
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    App.Self.SetProfile(CurrentProfile);
+                    //App.Self.Auth.Connect();
+                    App.Self.MainVM.Content = new Oms.OrdersView();
+                });
+            });
         }
     }
 }

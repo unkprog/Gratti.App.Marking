@@ -144,6 +144,7 @@
     <Compile Include="Views\Controls\Oms\OrdersView.xaml.cs">
       <DependentUpon>OrdersView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Controls\Oms\OrderView.xaml.ViewModel.Mssql.cs" />
     <Compile Include="Views\LogWindow.xaml.cs">
       <DependentUpon>LogWindow.xaml</DependentUpon>
     </Compile>
