@@ -17,9 +17,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             OrdersModel ordersResponse = test();
             this.Orders = ordersResponse.Orders;
 
+            RefreshCommand = ReactiveCommand.Create(() => { Task.Run(Refresh); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { Task.Run(PrintAllAvalaibleCurrentOrderInfo); });
         }
 
+        public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
+        
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
 
         public CertificateInfoModel Certificate { get { return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.SerialNumber); } }
@@ -67,7 +70,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
                 foreach(string dmcode in codes.Codes)
                 {
-                    SaveCisTrue( dmcode);
+                    //SaveCisTrue( dmcode);
                 }
             }
         }
