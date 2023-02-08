@@ -20,7 +20,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
         public EnterViewModel()
         {
             LoadProfiles();
-            EnterCommand = ReactiveCommand.Create(() => { Task.Run(Enter); });
+            EnterCommand = ReactiveCommand.Create(() => { Task.Run(() => Enter()); });
         }
 
         public ReactiveCommand<Unit, Unit> EnterCommand { get; }
@@ -69,6 +69,16 @@ namespace Gratti.App.Marking.Views.Controls.Models
             {
                 if (CurrentProfile != null)
                     CurrentProfile.ConnectionId = value;
+            }
+        }
+
+        public string SqlConnectionString
+        {
+            get { return CurrentProfile?.SqlConnectionString; }
+            set
+            {
+                if (CurrentProfile != null)
+                    CurrentProfile.SqlConnectionString = value;
             }
         }
 
@@ -133,6 +143,8 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 appendResult("Укажите идентификатор СУЗ (Oms Id)");
             if (string.IsNullOrEmpty(CurrentProfile.ConnectionId))
                 appendResult("Укажите идентификатор подключения (Connection Id)");
+            if (string.IsNullOrEmpty(CurrentProfile.SqlConnectionString))
+                appendResult("Укажите строку подключения SQL");
 
             JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic);
             string json = JsonSerializer.Serialize(setting, new JsonSerializerOptions { WriteIndented = true, Encoder = encoder });
@@ -143,18 +155,18 @@ namespace Gratti.App.Marking.Views.Controls.Models
         private void Enter()
         {
             string errorMessage = SaveProfiles();
-            //if (!string.IsNullOrEmpty(errorMessage))
-            //{
-            //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
-            //    return;
-            //}
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                App.Self.MainVM.Error(errorMessage, "Вход в систему");
+                return;
+            }
 
             App.Self.MainVM.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     App.Self.SetProfile(CurrentProfile);
-                    //App.Self.Auth.Connect();
+                    App.Self.Auth.Connect();
                     App.Self.MainVM.Content = new Oms.OrdersView();
                 });
             });

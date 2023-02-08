@@ -35,5 +35,8 @@ namespace Gratti.App.Marking.Api.Model
         public string Uit { get; set; }
         [JsonPropertyName("cistrue")]
         public string CisTrue { get; set; }
+
+        [JsonPropertyName("productGroup")]
+        public string ProductGroup { get; set; }
     }
 }

@@ -70,10 +70,12 @@
                                 <ColumnDefinition Width="200"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="200"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Идентификатор заказа:" VerticalAlignment="Center" FontWeight="Bold" />
                             <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
-                            <Button Grid.Column="3" Content="Распечатать все доступные" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                            <Button Grid.Column="3" Content="Распечатать 1 код маркировки" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
+                            <Button Grid.Column="4" Content="Распечатать все доступные" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
                         </Grid>
                         <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding Buffers}" SelectedItem="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentBufferInfo}"  Style="{StaticResource DataGridOrderStyle}">
                             <DataGrid.Columns>

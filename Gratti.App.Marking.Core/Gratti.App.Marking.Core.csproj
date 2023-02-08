@@ -71,6 +71,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converter\StringConverter.cs" />
     <Compile Include="DataMatrix\Encoder.Bitmap.cs" />
     <Compile Include="DataMatrix\Encoder.cs" />
     <Compile Include="Extensions\Enum.cs" />

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Gratti.App.Marking.Extensions
@@ -19,8 +20,9 @@ namespace Gratti.App.Marking.Extensions
            
             if (response != null)
             {
-                //var resultString = await response.Content.ReadAsStringAsync();  //Make sure to add a reference to System.Net.Http.Formatting.dll
-                result = JsonSerializer.Deserialize<T>(resultString);
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                result = JsonSerializer.Deserialize<T>(resultString, jsonSerializerOptions);
             }
             else
                 result = default(T);//throw new Exception(string.Format("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase));
@@ -43,7 +45,9 @@ namespace Gratti.App.Marking.Extensions
         public static T ReadAsJson<T>(this HttpContent content)
         {
             var dataAsString = content.ReadAsStringAsync().Result;
-            return JsonSerializer.Deserialize<T>(dataAsString);
+            JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
+            jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            return JsonSerializer.Deserialize<T>(dataAsString, jsonSerializerOptions);
         }
 
 
@@ -65,8 +69,9 @@ namespace Gratti.App.Marking.Extensions
 
             if (response != null)
             {
-                //var resultString = await response.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<R>(resultString);
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                result = JsonSerializer.Deserialize<R>(resultString, jsonSerializerOptions);
             }
             else
                 result = default(R);
@@ -106,8 +111,9 @@ namespace Gratti.App.Marking.Extensions
 
             if (response != null)
             {
-                //var resultString = await response.Content.ReadAsStringAsync();
-                result = JsonSerializer.Deserialize<R>(resultString);
+                JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
+                jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                result = JsonSerializer.Deserialize<R>(resultString, jsonSerializerOptions);
             }
             else
                 result = default(R);

@@ -32,26 +32,5 @@ namespace Gratti.App.Marking.Views.Controls
 
         EnterViewModel ViewModel => (this.DataContext as EnterViewModel);
 
-        //private void EnterButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    GroupEnum group = GroupEnum.lp;
-        //    string s = group.ToString();
-        //    string errorMessage = ViewModel.SaveProfiles();
-        //    //if (!string.IsNullOrEmpty(errorMessage))
-        //    //{
-        //    //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
-        //    //    return;
-        //    //}
-
-        //    App.Self.MainVM.Run(() =>
-        //    {
-        //        Application.Current.Dispatcher.Invoke(() =>
-        //        {
-        //            App.Self.SetProfile(ViewModel.CurrentProfile);
-        //            //App.Self.Auth.Connect();
-        //            App.Self.MainVM.Content = new Oms.OrdersView();
-        //        });
-        //    });
-        //}
     }
 }

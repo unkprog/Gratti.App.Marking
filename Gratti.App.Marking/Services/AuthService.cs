@@ -83,9 +83,10 @@ namespace Gratti.App.Marking.Services
             TokenAuthModel result = null;
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/"));
+                client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/" + profile.ConnectionId));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 result = client.PostJson<TokenModel, TokenAuthModel>("", tokenRequest);
+                result.Date = DateTime.Now;
             }
 
             return result;

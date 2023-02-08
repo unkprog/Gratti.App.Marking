@@ -37,7 +37,12 @@ namespace Gratti.App.Marking.Api.Model
         [JsonPropertyName("rejectionReason")]
         public string RejectionReason { get; set; }
 
-        [JsonPropertyName("status")]
+        //[JsonPropertyName("status")]
+        //[JsonConverter(typeof(StatusEnum))]
+        [JsonIgnore]
         public StatusEnum Status { get; set; }
+
+        [JsonPropertyName("status")]
+        public string StatusStr { get; set; }
     }
 }
