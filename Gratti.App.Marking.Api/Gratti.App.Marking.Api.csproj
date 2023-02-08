@@ -73,6 +73,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Model\BufferInfoModel.cs" />
+    <Compile Include="Model\CodesModel.cs" />
     <Compile Include="Model\OrderInfoModel.cs" />
     <Compile Include="Model\OrderProductInfoModel.cs" />
     <Compile Include="Model\OrdersModel.cs" />

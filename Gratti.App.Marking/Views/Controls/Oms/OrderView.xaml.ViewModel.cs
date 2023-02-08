@@ -1,11 +1,11 @@
-﻿using Gratti.App.Marking.Api.Model;
-using Gratti.App.Marking.Model;
-using Gratti.App.Marking.Views.Models;
-using Gratti.Marking.Extensions;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Windows.Markup;
+using Gratti.App.Marking.Api.Model;
+using Gratti.App.Marking.Model;
+using Gratti.App.Marking.Views.Models;
+using Gratti.Marking.Extensions;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
@@ -17,6 +17,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             this.Orders = ordersResponse.Orders;
         }
 
+        public CertificateInfoModel Certificate { get { return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.SerialNumber); } }
 
         private List<OrderInfoModel> orders;
         public List<OrderInfoModel> Orders
@@ -25,12 +26,26 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             set { this.RaiseAndSetIfChanged(ref orders, value); }
         }
 
+        private OrderInfoModel currentOrderInfo;
+        public OrderInfoModel CurrentOrderInfo
+        {
+            get { return currentOrderInfo; }
+            set { this.RaiseAndSetIfChanged(ref currentOrderInfo, value); }
+        }
+
+        private BufferInfoModel currentBufferInfo;
+        public BufferInfoModel CurrentBufferInfo
+        {
+            get { return currentBufferInfo; }
+            set { this.RaiseAndSetIfChanged(ref currentBufferInfo, value); }
+        }
+
         public void Refresh()
         {
             TryCatch.Invoke(() =>
             {
-                OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
-                //OrdersModel ordersResponse = test();
+                //OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
+                OrdersModel ordersResponse = test();
                 this.Orders = ordersResponse.Orders;
             }, 
             (errorMessage) => Log(errorMessage));

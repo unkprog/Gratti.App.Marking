@@ -133,6 +133,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Services\AuthService.cs" />
+    <Compile Include="Services\DataService.cs" />
     <Compile Include="Utils\Certificate.cs" />
     <Compile Include="Utils\IO.cs" />
     <Compile Include="Views\Controls\EnterView.xaml.cs">

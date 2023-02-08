@@ -40,5 +40,11 @@ namespace Gratti.App.Marking.Api
             return Get<OrderProductInfoModel>(clientToken, group, "/order/product", string.Concat("&orderId=", orderId));
         }
 
+
+        public CodesModel GetCodes(string clientToken, GroupEnum group, string orderId, string gtin, int quantity)
+        {
+            return Get<CodesModel>(clientToken, group, "/codes", string.Concat("&orderId=", orderId, "&gtin=", gtin, "&quantity=", quantity));
+        }
+        
     }
 }

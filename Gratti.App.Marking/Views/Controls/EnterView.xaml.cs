@@ -37,18 +37,18 @@ namespace Gratti.App.Marking.Views.Controls
             GroupEnum group = GroupEnum.lp;
             string s = group.ToString();
             string errorMessage = ViewModel.SaveProfiles();
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                App.Self.MainVM.Error(errorMessage, "Вход в систему");
-                return;
-            }
+            //if (!string.IsNullOrEmpty(errorMessage))
+            //{
+            //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
+            //    return;
+            //}
 
             App.Self.MainVM.Run(() =>
             {
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     App.Self.SetProfile(ViewModel.CurrentProfile);
-                    App.Self.Auth.Connect();
+                    //App.Self.Auth.Connect();
                     App.Self.MainVM.Content = new Oms.OrdersView();
                 });
             });

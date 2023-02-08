@@ -9,15 +9,40 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.DataContext>
         <vm:OrdersViewModel/>
-    </UserControl.DataContext>    
-    <Grid>
-        <DataGrid x:Name="OrdersDataGrid" ItemsSource="{Binding Orders}" IsReadOnly="True" AutoGenerateColumns="False"
-                  AlternatingRowBackground="#FFFFFFAF" HorizontalGridLinesBrush="#FFDFDFDF" VerticalGridLinesBrush="#FFDFDFDF"
-                  RowHeight="24" >
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DataGridOrderStyle" TargetType="DataGrid">
+            <Setter Property="IsReadOnly" Value="True" />
+            <Setter Property="AutoGenerateColumns" Value="False" />
+            <Setter Property="RowHeight" Value="24" />
+            <!--<Setter Property="AlternatingRowBackground" Value="#FFEFEFEF" />-->
+            <Setter Property="HorizontalGridLinesBrush" Value="#FFDFDFDF" />
+            <Setter Property="VerticalGridLinesBrush" Value="#FFDFDFDF" />
+        </Style>
+    </UserControl.Resources>
+    <Grid Margin="4">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Margin="16 0" DataContext="{Binding}">
+            <TextBlock Text="{Binding Certificate.Name}" FontSize="16" FontWeight="Bold"/>
+            <TextBlock Text="{Binding Certificate.INNStr}" FontSize="14" />
+        </StackPanel>
+        <DataGrid x:Name="OrdersDataGrid" Margin="0 4 0 0" Grid.Row="1" ItemsSource="{Binding Orders}" SelectedItem="{Binding CurrentOrderInfo}" Style="{StaticResource DataGridOrderStyle}">
             <DataGrid.Resources>
-            <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
-                <Setter Property="VerticalAlignment" Value="Center" />
-            </Style>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="#FFEFEFEF" />
+                            <Setter Property="BorderBrush" Value="Silver" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Дата" Binding="{Binding CreatedDateTime}" ElementStyle="{StaticResource DataGridVerticalText}"/>
@@ -28,6 +53,39 @@
                 <DataGridTextColumn Header="Доступно КМ" Binding="{Binding TotalAvailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
                 <DataGridTextColumn Header="Статус" Binding="{Binding OrderStatusText}" ElementStyle="{StaticResource DataGridVerticalText}"/>
             </DataGrid.Columns>
+            <DataGrid.RowDetailsTemplate>
+                <DataTemplate>
+                    <Grid Margin="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="200"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="200"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Идентификатор заказа:" VerticalAlignment="Center" FontWeight="Bold" />
+                            <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
+                            <Button Grid.Column="3" Content="Распечатать все доступные" Margin="15 0 0 0"  VerticalAlignment="Center"/>
+                        </Grid>
+                        <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding Buffers}" SelectedItem="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentBufferInfo}"  Style="{StaticResource DataGridOrderStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Код товара" Binding="{Binding Gtin}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Наименование товара" Binding="{Binding FullName}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Всего" Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Доступно" Binding="{Binding AvailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Получено" Binding="{Binding TotalPassed}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Недоступно" Binding="{Binding UnavailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Срок" Binding="{Binding ExpiredDateTime}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                                <DataGridTextColumn Header="Статус" Binding="{Binding BufferStatusText}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </DataTemplate>
+            </DataGrid.RowDetailsTemplate>
         </DataGrid>
     </Grid>
 </UserControl>

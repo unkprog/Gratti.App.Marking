@@ -5,6 +5,7 @@ using Org.BouncyCastle.Security;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Xml.Linq;
 
 namespace Gratti.App.Marking.Utils
 {
@@ -34,6 +35,34 @@ namespace Gratti.App.Marking.Utils
             return result;
         }
 
+        internal static CertificateInfoModel GetCertificateInfo(string serialNumber)
+        {
+            CertificateInfoModel result = new CertificateInfoModel()
+            {
+                Name = "Сертификат не выбран",
+                INN = "000000000000"
+            };
+            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            {
+                store.Open(OpenFlags.ReadOnly);
+                foreach (X509Certificate2 certificate in store.Certificates)
+                {
+                    if (certificate.SerialNumber == serialNumber)
+                    {
+                        result = new CertificateInfoModel()
+                        {
+                            SerialNumber = certificate.SerialNumber,
+                            Name = GetName(certificate),
+                            INN = GetINN(certificate),
+                            NotAfter = certificate.NotAfter,
+
+                        };
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
         internal static X509Certificate2 GetCertificate(string serialNumber)
         {
             X509Certificate2 result = null;
