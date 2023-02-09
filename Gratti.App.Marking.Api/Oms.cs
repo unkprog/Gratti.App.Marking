@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using Gratti.App.Marking.Api.Model;
 using Gratti.App.Marking.Extensions;
+using System.Collections.Generic;
 
 namespace Gratti.App.Marking.Api
 {
@@ -35,9 +36,9 @@ namespace Gratti.App.Marking.Api
 
         }
 
-        public OrderProductInfoModel GetOrderProductInfo(string clientToken, GroupEnum group, string orderId)
+        public Dictionary<string, OrderProductInfoModel> GetOrderProductInfo(string clientToken, GroupEnum group, string orderId)
         {
-            return Get<OrderProductInfoModel>(clientToken, group, "/order/product", string.Concat("&orderId=", orderId));
+            return Get<Dictionary<string, OrderProductInfoModel>>(clientToken, group, "/order/product", string.Concat("&orderId=", orderId));
         }
 
 

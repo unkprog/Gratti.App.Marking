@@ -13,8 +13,6 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             if (model == null || string.IsNullOrEmpty(model.CisTrue))
                 return;
 
-           // DataMatrixModel model = new DataMatrixModel(cistrue);
-
             int id = SaveCis(ConnectionString, model);
             byte[] img = Core.DataMatrix.Encoder.EncodeToBytes(string.IsNullOrEmpty(model.CisTrue) ? model.Cis : model.CisTrue, 200);
             SaveDataMatrixBitmap(ConnectionString, id, img);
@@ -28,12 +26,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                    , Environment.NewLine, "if isnull(@DocID,0) = 0"
                    , Environment.NewLine, "begin"
                    , Environment.NewLine, "  select @DocID = isnull(max([DocID]), 0) + 1 from [dbo].[СписокКМ] with(nolock)"
-                   , Environment.NewLine, "  insert into [dbo].[СписокКМ] ([DocID], [ExtID], [Deleted], [ModifyDate], [Version], [Cis], [Gtin], [SGtin], [Uit], [CisTrue], [ProductGroup])"
+                   , Environment.NewLine, "  insert into [dbo].[СписокКМ] ([DocID], [ExtID], [Deleted], [ModifyDate], [Version], [Cis], [Gtin], [SGtin], [Uit], [CisTrue], [ProductGroup], [ШтрихКод])"
                    , Environment.NewLine, "  select [DocID] = @DocID, [ExtID] = ltrim(rtrim(str(@DocID))), [Deleted] = 0, [ModifyDate] = getdate(), [Version] = 0"
-                   , Environment.NewLine, "       , [Cis] = @Cis, [Gtin] = @Gtin, [SGtin] = @SGtin, [Uit] = @Uit, [CisTrue] = @CisTrue, [ProductGroup] = @ProductGroup"
+                   , Environment.NewLine, "       , [Cis] = @Cis, [Gtin] = @Gtin, [SGtin] = @SGtin, [Uit] = @Uit, [CisTrue] = @CisTrue, [ProductGroup] = @ProductGroup, [ШтрихКод]=@Barcode"
                    , Environment.NewLine, "end"
                    , Environment.NewLine, "else"
-                   , Environment.NewLine, "  update [dbo].[СписокКМ] set [ModifyDate] = getdate(), [Cis] = @Cis, [Gtin] = @Gtin, [SGtin] = @SGtin, [Uit] = @Uit, [CisTrue] = @CisTrue, [ProductGroup] = @ProductGroup"
+                   , Environment.NewLine, "  update [dbo].[СписокКМ] set [ModifyDate] = getdate(), [Cis] = @Cis, [Gtin] = @Gtin, [SGtin] = @SGtin, [Uit] = @Uit, [CisTrue] = @CisTrue, [ProductGroup] = @ProductGroup, [ШтрихКод]=@Barcode"
                    , Environment.NewLine, "  where [DocID] = @DocID"
                    , Environment.NewLine, "select @DocID");
 
@@ -47,6 +45,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                         new SqlParameter("@Uit", model.Uit),
                         new SqlParameter("@CisTrue", model.CisTrue),
                         new SqlParameter("@ProductGroup", model.ProductGroup.ToString()),
+                        new SqlParameter("@Barcode", string.IsNullOrEmpty( model.Barcode) ? string.Empty : model.Barcode),
                 }
                 , null
                 , (values) => {

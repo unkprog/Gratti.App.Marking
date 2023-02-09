@@ -37,13 +37,9 @@ namespace Gratti.App.Marking.Api.Model
         [JsonPropertyName("availableCodes")]
         public int AvailableCodes { get; set; }
 
-        //[JsonPropertyName("bufferStatus")]
-        //[JsonConverter(typeof(BufferStatusEnum))]
-        [JsonIgnore]
-        public BufferStatusEnum BufferStatus { get; set; }
-
         [JsonPropertyName("bufferStatus")]
-        public string BufferStatusStr { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public BufferStatusEnum BufferStatus { get; set; }
 
         [JsonPropertyName("expiredDate")]
         public long ExpiredDate { get; set; }

@@ -58,6 +58,19 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
                 //OrdersModel ordersResponse = test();
                 ordersResponse.Orders.Sort((x, y) => { return y.CreatedDateTime.CompareTo(x.CreatedDateTime); });
+
+                foreach (OrderInfoModel order in ordersResponse.Orders)
+                {
+                    Dictionary<string, OrderProductInfoModel> productItems = App.Self.OmsApi.GetOrderProductInfo(App.Self.Auth.OmsToken, Api.GroupEnum.lp, order.OrderId);
+                    foreach(BufferInfoModel buffer in order.Buffers)
+                    {
+                        OrderProductInfoModel product;
+                        if (productItems.TryGetValue(buffer.Gtin, out product))
+                        {
+                            buffer.ProductInfo = product;
+                        }
+                    }
+                }
                 this.Orders = ordersResponse.Orders;
             });
 
@@ -96,7 +109,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                     CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
                     foreach (string dmcode in codes.Codes)
                     {
-                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
+                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString(), Barcode = CurrentOrderInfo.ProductionOrderId };
                         SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
                     }
                 }
@@ -104,69 +117,69 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             Refresh();
         }
 
-        private OrdersModel test()
-        {
-           return new OrdersModel()
-            {
-                OmsId = App.Self.Auth.Profile.OmsId,
-                Orders = new List<OrderInfoModel>(new OrderInfoModel[]
-                    {
-                        new OrderInfoModel()
-                        {
-                            OrderId = "123",
-                            OrderStatus = OrderInfoModel.OrderStatusEnum.PENDING,
-                            Buffers = new List<BufferInfoModel>(new BufferInfoModel[] {
-                                new BufferInfoModel()
-                                {
-                                    OmsId = App.Self.Auth.Profile.OmsId,
-                                    OrderId = "123",
-                                    AvailableCodes = 3,
-                                    BufferStatus = BufferStatusEnum.ACTIVE,
-                                    TotalCodes = 5,
-                                    TotalPassed = 2
-                                },
-                                new BufferInfoModel()
-                                {
-                                    OmsId = App.Self.Auth.Profile.OmsId,
-                                    OrderId = "123",
-                                    AvailableCodes = 3,
-                                    BufferStatus = BufferStatusEnum.ACTIVE,
-                                    TotalCodes = 5,
-                                    TotalPassed = 2
-                                }
-                            }),
-                            ProductionOrderId = "123",
+        //private OrdersModel test()
+        //{
+        //   return new OrdersModel()
+        //    {
+        //        OmsId = App.Self.Auth.Profile.OmsId,
+        //        Orders = new List<OrderInfoModel>(new OrderInfoModel[]
+        //            {
+        //                new OrderInfoModel()
+        //                {
+        //                    OrderId = "123",
+        //                    OrderStatusStr = OrderInfoModel.OrderStatusEnum.PENDING,
+        //                    Buffers = new List<BufferInfoModel>(new BufferInfoModel[] {
+        //                        new BufferInfoModel()
+        //                        {
+        //                            OmsId = App.Self.Auth.Profile.OmsId,
+        //                            OrderId = "123",
+        //                            AvailableCodes = 3,
+        //                            BufferStatus = BufferStatusEnum.ACTIVE,
+        //                            TotalCodes = 5,
+        //                            TotalPassed = 2
+        //                        },
+        //                        new BufferInfoModel()
+        //                        {
+        //                            OmsId = App.Self.Auth.Profile.OmsId,
+        //                            OrderId = "123",
+        //                            AvailableCodes = 3,
+        //                            BufferStatus = BufferStatusEnum.ACTIVE,
+        //                            TotalCodes = 5,
+        //                            TotalPassed = 2
+        //                        }
+        //                    }),
+        //                    ProductionOrderId = "123",
 
-                        },
-                        new OrderInfoModel()
-                        {
-                            OrderId = "321",
-                            OrderStatus = OrderInfoModel.OrderStatusEnum.PENDING,
-                            Buffers = new List<BufferInfoModel>(new BufferInfoModel[] {
-                                new BufferInfoModel()
-                                {
-                                    OmsId = App.Self.Auth.Profile.OmsId,
-                                    OrderId = "321",
-                                    AvailableCodes = 3,
-                                    BufferStatus = BufferStatusEnum.ACTIVE,
-                                    TotalCodes = 5,
-                                    TotalPassed = 2
-                                },
-                                new BufferInfoModel()
-                                {
-                                    OmsId = App.Self.Auth.Profile.OmsId,
-                                    OrderId = "321",
-                                    AvailableCodes = 3,
-                                    BufferStatus = BufferStatusEnum.ACTIVE,
-                                    TotalCodes = 7,
-                                    TotalPassed = 4
-                                }
-                            }),
-                            ProductionOrderId = "321",
+        //                },
+        //                new OrderInfoModel()
+        //                {
+        //                    OrderId = "321",
+        //                    OrderStatus = OrderInfoModel.OrderStatusEnum.PENDING,
+        //                    Buffers = new List<BufferInfoModel>(new BufferInfoModel[] {
+        //                        new BufferInfoModel()
+        //                        {
+        //                            OmsId = App.Self.Auth.Profile.OmsId,
+        //                            OrderId = "321",
+        //                            AvailableCodes = 3,
+        //                            BufferStatus = BufferStatusEnum.ACTIVE,
+        //                            TotalCodes = 5,
+        //                            TotalPassed = 2
+        //                        },
+        //                        new BufferInfoModel()
+        //                        {
+        //                            OmsId = App.Self.Auth.Profile.OmsId,
+        //                            OrderId = "321",
+        //                            AvailableCodes = 3,
+        //                            BufferStatus = BufferStatusEnum.ACTIVE,
+        //                            TotalCodes = 7,
+        //                            TotalPassed = 4
+        //                        }
+        //                    }),
+        //                    ProductionOrderId = "321",
 
-                        }
-                    })
-            };
-        }
+        //                }
+        //            })
+        //    };
+        //}
     }
 }

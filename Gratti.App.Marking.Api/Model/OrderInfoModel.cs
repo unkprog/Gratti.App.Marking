@@ -41,13 +41,9 @@ namespace Gratti.App.Marking.Api.Model
         [JsonPropertyName("orderId")]
         public string OrderId { get; set; }
 
-        //[JsonPropertyName("orderStatus")]
-        //[JsonConverter(typeof(OrderStatusEnum))]
-        [JsonIgnore]
-        public OrderStatusEnum OrderStatus { get; set; }
-
         [JsonPropertyName("orderStatus")]
-        public string OrderStatusStr { get; set; }
+        [JsonConverter(typeof(JsonStringEnumConverter))]
+        public OrderStatusEnum OrderStatus { get; set; }
 
         [JsonPropertyName("buffers")]
         public List<BufferInfoModel> Buffers { get; set; }

@@ -21,6 +21,7 @@ namespace Gratti.App.Marking.Api.Model
             Cis = Uit = (char29 > -1 ? CisTrue.Substring(0, char29) : CisTrue);
             Gtin = Cis.Substring(2, 14);
             Sgtin = Cis.Substring(18, 13);
+
         }
 
 
@@ -38,5 +39,8 @@ namespace Gratti.App.Marking.Api.Model
 
         [JsonPropertyName("productGroup")]
         public string ProductGroup { get; set; }
+
+        [JsonPropertyName("barcode")]
+        public string Barcode { get; set; }
     }
 }
