@@ -94,12 +94,20 @@ namespace Gratti.App.Marking.Services
 
         public void Connect()
         {
-            logger?.Log("Получение токена...");
-            TokenModel tokenResponse = GetTokenResponse();
-            logger?.Log("Токен для авторизации получен (UUID: " + tokenResponse.UUID + ", Data:" + tokenResponse.Data + ")...");
+            if (string.IsNullOrEmpty(profile.ThumbPrint))
+                throw new Exception("Не указан сертификат");
+
 
             logger?.Log("Выбор сертификата для авторизации...");
-            X509Certificate2 cert = Utils.Certificate.GetCertificate(profile.SerialNumber);
+            X509Certificate2 cert = Utils.Certificate.GetCertificate(profile.ThumbPrint);
+
+            if (cert == null)
+                throw new Exception("Сертификат не найден");
+
+            logger?.Log("Получение токена...");
+            TokenModel tokenResponse = GetTokenResponse();
+
+            logger?.Log("Токен для авторизации получен (UUID: " + tokenResponse.UUID + ", Data:" + tokenResponse.Data + ")...");
 
             logger?.Log("Авторизация...");
 

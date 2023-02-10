@@ -7,13 +7,11 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
-using System.Windows;
 using ReactiveUI;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Utils;
 using Gratti.App.Marking.Views.Models;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 
 namespace Gratti.App.Marking.Views.Controls.Models
@@ -38,7 +36,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
             set
             {
                 this.RaiseAndSetIfChanged(ref currentProfile, value);
-                CurrentCertificate = Certificates.FirstOrDefault(f => f.SerialNumber == currentProfile.SerialNumber);
+                CurrentCertificate = Certificates.FirstOrDefault(f => f.ThumbPrint == currentProfile.ThumbPrint);
             }
         }
 
@@ -51,7 +49,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
             set
             {
                 this.RaiseAndSetIfChanged(ref currentCertificate, value);
-                CurrentProfile.SerialNumber = currentCertificate?.SerialNumber;
+                CurrentProfile.ThumbPrint = currentCertificate?.ThumbPrint;
             }
         }
 
@@ -140,7 +138,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 result = string.Concat(result, string.IsNullOrEmpty(result) ? string.Empty : Environment.NewLine, msg);
             });
 
-            if (string.IsNullOrEmpty(CurrentProfile.SerialNumber))
+            if (string.IsNullOrEmpty(CurrentProfile.ThumbPrint))
                 appendResult("Выберите сертификат");
             if (string.IsNullOrEmpty(CurrentProfile.OmsId))
                 appendResult("Укажите идентификатор СУЗ (Oms Id)");
@@ -173,15 +171,11 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 //    return;
                 //}
 
-                App.Self.MainVM.Run(() =>
-                {
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        App.Self.SetProfile(CurrentProfile);
-                        App.Self.Auth.Connect();
-                        App.Self.MainVM.Content = new Oms.OrdersView();
-                    });
-                });
+
+                App.Self.SetProfile(CurrentProfile);
+                App.Self.Auth.Connect();
+                App.Self.MainVM.Content = new Oms.OrdersView();
+
             });
         }
 

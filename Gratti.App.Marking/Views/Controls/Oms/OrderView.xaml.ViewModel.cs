@@ -28,7 +28,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             public ReactiveCommand<Unit, Unit> PrintOneCurrentOrderInfoCommand { get; }
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
 
-        public CertificateInfoModel Certificate { get { return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.SerialNumber); } }
+        public CertificateInfoModel Certificate { get { return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.ThumbPrint); } }
 
         private List<OrderInfoModel> orders;
         public List<OrderInfoModel> Orders

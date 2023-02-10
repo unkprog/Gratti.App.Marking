@@ -23,7 +23,7 @@ namespace Gratti.App.Marking.Utils
                     {
                         result.Add(new CertificateInfoModel()
                         {
-                            SerialNumber = certificate.SerialNumber,
+                            ThumbPrint = certificate.Thumbprint,
                             Name = GetName(certificate),
                             INN = GetINN(certificate),
                             NotAfter = certificate.NotAfter,
@@ -35,7 +35,7 @@ namespace Gratti.App.Marking.Utils
             return result;
         }
 
-        internal static CertificateInfoModel GetCertificateInfo(string serialNumber)
+        internal static CertificateInfoModel GetCertificateInfo(string thumbPrint)
         {
             CertificateInfoModel result = new CertificateInfoModel()
             {
@@ -47,11 +47,11 @@ namespace Gratti.App.Marking.Utils
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    if (certificate.SerialNumber == serialNumber)
+                    if (certificate.Thumbprint == thumbPrint)
                     {
                         result = new CertificateInfoModel()
                         {
-                            SerialNumber = certificate.SerialNumber,
+                            ThumbPrint = certificate.Thumbprint,
                             Name = GetName(certificate),
                             INN = GetINN(certificate),
                             NotAfter = certificate.NotAfter,
@@ -63,7 +63,7 @@ namespace Gratti.App.Marking.Utils
             }
             return result;
         }
-        internal static X509Certificate2 GetCertificate(string serialNumber)
+        internal static X509Certificate2 GetCertificate(string thumbPrint)
         {
             X509Certificate2 result = null;
             using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
@@ -71,7 +71,7 @@ namespace Gratti.App.Marking.Utils
                 store.Open(OpenFlags.ReadOnly);
                 foreach (X509Certificate2 certificate in store.Certificates)
                 {
-                    if (certificate.SerialNumber == serialNumber)
+                    if (certificate.Thumbprint == thumbPrint)
                     {
                         result = certificate;
                         break;

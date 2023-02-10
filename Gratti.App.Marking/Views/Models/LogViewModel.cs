@@ -11,7 +11,7 @@ namespace Gratti.App.Marking.Views.Models
 
         public void Log(string logRecord)
         {
-            LogItems.Insert(0, logRecord);
+            SyncThread(() => LogItems.Insert(0, logRecord));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Gratti.App.Marking.Model
 
         public string ConnectionId { get; set; }
 
-        public string SerialNumber { get; set; }
+        public string ThumbPrint { get; set; }
 
         public string SqlConnectionString { get; set; }
 
