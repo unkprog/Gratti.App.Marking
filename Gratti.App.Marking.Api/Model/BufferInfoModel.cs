@@ -87,6 +87,10 @@ namespace Gratti.App.Marking.Api.Model
         }
 
         [JsonIgnore]
+        public string ExpiredDateTimeStr => ExpiredDateTime.ToString("dd.MM.yyyy HH:mm:ss");
+
+
+        [JsonIgnore]
         public OrderProductInfoModel ProductInfo { get; set; }
 
         [JsonIgnore]

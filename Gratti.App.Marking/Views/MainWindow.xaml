@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Гратти.Маркировка" Width="1024" Height="768" WindowStartupLocation="CenterScreen" Icon="/Images/logo.png"
+        Title="Гратти.Маркировка" Width="1200" Height="768" WindowState="Maximized" WindowStartupLocation="CenterScreen" Icon="/Images/logo.png"
         Closed="Window_Closed">
     
     <Grid>

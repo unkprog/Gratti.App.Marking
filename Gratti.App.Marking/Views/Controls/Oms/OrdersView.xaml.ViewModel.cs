@@ -4,6 +4,7 @@ using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Views.Models;
 using System.Reactive;
 using ReactiveUI;
+using System.Reactive.Linq;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
@@ -14,8 +15,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintOneCurrentOrderInfo()); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllAvalaibleCurrentOrderInfo()); });
-
-            RefreshCommand.Execute();
+            App.Self.MainVM.RunAsync(() => Refresh());
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
@@ -68,7 +68,11 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                     }
                 }
             }
-            SyncThread(() => this.Orders = ordersResponse.Orders);
+            SyncThread(() => {
+                this.Orders = ordersResponse.Orders;
+                if (this.Orders.Count > 0)
+                    this.CurrentOrderInfo = this.Orders[0];
+                });
         }
 
         private void PrintOneCurrentOrderInfo()

@@ -58,6 +58,9 @@ namespace Gratti.App.Marking.Api.Model
         public DateTime CreatedDateTime => new DateTime(1970, 1, 1, 0, 0, 0, 0).ToLocalTime().AddMilliseconds(Convert.ToInt64(СreatedTimestamp));
 
         [JsonIgnore]
+        public string CreatedDateTimeStr => CreatedDateTime.ToString("dd.MM.yyyy HH:mm:ss");
+
+        [JsonIgnore]
         public int TotalBuffers
         {
             get

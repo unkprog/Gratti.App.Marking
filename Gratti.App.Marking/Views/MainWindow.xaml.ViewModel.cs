@@ -24,6 +24,7 @@ namespace Gratti.App.Marking.Views.Models
         public void Busy(bool aIsShow, bool aIsReset = false)
         {
             countBusy = (!aIsShow && aIsReset ? 0 : countBusy + (aIsShow ? 1 : -1));
+            countBusy = (countBusy < 0 ? 0 : countBusy);
             VisibilityBusy = (countBusy > 0 ? Visibility.Visible : Visibility.Collapsed);
         }
         public void Error(string errorMessage, string aTitle = "Гратти.Маркировка")
