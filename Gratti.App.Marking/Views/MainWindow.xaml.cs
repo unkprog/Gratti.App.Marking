@@ -26,9 +26,6 @@ namespace Gratti.App.Marking.Views
         public MainWindow()
         {
             InitializeComponent();
-           
-
-            ViewModel.Log("MainWindow");
         }
 
         MainWindowViewModel ViewModel => (this.DataContext as MainWindowViewModel);

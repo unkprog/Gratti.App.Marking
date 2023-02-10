@@ -21,10 +21,10 @@ namespace Gratti.App.Marking.Views.Models
         }
         
         private int countBusy = 0;
-        public void Busy(bool aIsShow)
+        public void Busy(bool aIsShow, bool aIsReset = false)
         {
-            countBusy += (aIsShow ? 1 : -1);
-            VisibilityBusy = (aIsShow ? Visibility.Visible : Visibility.Collapsed);
+            countBusy = (!aIsShow && aIsReset ? 0 : countBusy + (aIsShow ? 1 : -1));
+            VisibilityBusy = (countBusy > 0 ? Visibility.Visible : Visibility.Collapsed);
         }
         public void Error(string errorMessage, string aTitle = "Гратти.Маркировка")
         {
@@ -42,7 +42,7 @@ namespace Gratti.App.Marking.Views.Models
                  if (ex.InnerException != null)
                      msg = string.Concat(msg, Environment.NewLine, ex.InnerException.Message);
                  Error(msg);
-                 Busy(false);
+                 Busy(false, true);
              });
             runCommand.IsExecuting.Subscribe(isExecuting => Busy(isExecuting));
             runCommand.Execute().Subscribe();
