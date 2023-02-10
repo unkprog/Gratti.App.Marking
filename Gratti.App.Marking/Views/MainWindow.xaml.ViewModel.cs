@@ -33,7 +33,7 @@ namespace Gratti.App.Marking.Views.Models
             return;
         }
 
-        public void Run(Action action)
+        public void RunAsync(Action action)
         {
             var runCommand = ReactiveCommand.CreateFromTask(_ => Task.Run(action));
             runCommand.ThrownExceptions.Subscribe((ex) =>

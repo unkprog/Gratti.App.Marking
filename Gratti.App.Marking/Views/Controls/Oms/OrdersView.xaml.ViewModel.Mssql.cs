@@ -1,13 +1,17 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using System.Collections.Generic;
 using Gratti.App.Marking.Api.Model;
+using Gratti.App.Marking.Model;
+using Gratti.App.Marking.Views.Models;
+using System.Reactive;
+using ReactiveUI;
 using Gratti.App.Marking.Extensions;
+using System.Data.SqlClient;
+using System;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
-    partial class OrdersViewModel
+    public partial class OrdersViewModel
     {
-
         public void SaveCisTrue(string ConnectionString, DataMatrixModel model)
         {
             if (model == null || string.IsNullOrEmpty(model.CisTrue))
@@ -48,7 +52,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                         new SqlParameter("@Barcode", string.IsNullOrEmpty( model.Barcode) ? string.Empty : model.Barcode),
                 }
                 , null
-                , (values) => {
+                , (values) =>
+                {
                     result = values[0].ToInt();
                 });
 
@@ -76,7 +81,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                         new SqlParameter("@Gtin", model.Gtin),
                 }
                 , null
-                , (values) => {
+                , (values) =>
+                {
                     result = values[0].ToInt();
                 });
             return result;
@@ -104,7 +110,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                         new SqlParameter("@Img", img)
                    }
                    , null
-                   , (values) => {
+                   , (values) =>
+                   {
 
                    });
 

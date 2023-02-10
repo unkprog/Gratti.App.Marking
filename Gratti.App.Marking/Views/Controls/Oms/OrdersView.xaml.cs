@@ -1,6 +1,7 @@
-﻿using Gratti.App.Marking.Views.Controls.Oms.Models;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using Gratti.App.Marking.Views.Controls.Oms.Models;
 
 namespace Gratti.App.Marking.Views.Controls.Oms
 {
@@ -12,15 +13,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms
         public OrdersView()
         {
             InitializeComponent();
-
-            App.Self.MainVM.Run(() =>
-            {
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ViewModel.Refresh();
-                });
-            });
-           
+            this.DataContext = new OrdersViewModel();
         }
 
         OrdersViewModel ViewModel => (this.DataContext as OrdersViewModel);

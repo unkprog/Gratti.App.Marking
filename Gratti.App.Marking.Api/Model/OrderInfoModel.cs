@@ -7,26 +7,27 @@ using Gratti.App.Marking.Core.Extensions;
 
 namespace Gratti.App.Marking.Api.Model
 {
-    public enum OrderStatusEnum
-    {
-        [Display(Name = "Заказ создан")]
-        CREATED,
-        [Display(Name = "Ожидает подтверждения ГИС МТ")]
-        PENDING,
-        [Display(Name = "Не подтверждён в ГИС МТ")]
-        DECLINED,
-        [Display(Name = "Подтверждён в ГИС МТ")]
-        APPROVED,
-        [Display(Name = "Готов к печати")]
-        READY,
-        [Display(Name = "Срок заказа истек")]
-        EXPIRED,
-        [Display(Name = "Заказ закрыт")]
-        CLOSED
-    }
 
     public class OrderInfoModel
     {
+        public enum OrderStatusEnum
+        {
+            [Display(Name = "Заказ создан")]
+            CREATED,
+            [Display(Name = "Ожидает подтверждения ГИС МТ")]
+            PENDING,
+            [Display(Name = "Не подтверждён в ГИС МТ")]
+            DECLINED,
+            [Display(Name = "Подтверждён в ГИС МТ")]
+            APPROVED,
+            [Display(Name = "Готов к печати")]
+            READY,
+            [Display(Name = "Срок заказа истек")]
+            EXPIRED,
+            [Display(Name = "Заказ закрыт")]
+            CLOSED
+        }
+
         public OrderInfoModel()
         {
             Buffers = new List<BufferInfoModel>();

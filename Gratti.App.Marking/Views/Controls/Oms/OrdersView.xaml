@@ -3,17 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Gratti.App.Marking.Views.Controls.Oms"
-             xmlns:vm="clr-namespace:Gratti.App.Marking.Views.Controls.Oms.Models"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.DataContext>
-        <vm:OrdersViewModel/>
-    </UserControl.DataContext>
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+
     <UserControl.Resources>
-        <Style x:Key="DataGridVerticalText" TargetType="TextBlock">
+        <Style x:Key="DataGridTextStyle" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
+        <Style x:Key="DataGridDateStyle" TargetType="TextBlock" BasedOn="{StaticResource DataGridTextStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="DataGridCenterText" TargetType="TextBlock" BasedOn="{StaticResource DataGridTextStyle}">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        
+        
         <Style x:Key="DataGridOrderStyle" TargetType="DataGrid">
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="AutoGenerateColumns" Value="False" />
@@ -36,7 +41,7 @@
             <TextBlock Text="{Binding Certificate.Name}" FontSize="16" FontWeight="Bold"/>
             <TextBlock Text="{Binding Certificate.INNStr}" FontSize="14" />
         </StackPanel>
-        <DataGrid x:Name="OrdersDataGrid" Margin="0 4 0 0" Grid.Row="1" ItemsSource="{Binding Orders}" SelectedItem="{Binding CurrentOrderInfo}" Style="{StaticResource DataGridOrderStyle}">
+        <DataGrid x:Name="OrdersDataGrid" Margin="0 4 0 0" Grid.Row="1" ItemsSource="{Binding Orders}" SelectedIndex="1" SelectedItem="{Binding CurrentOrderInfo}" Style="{StaticResource DataGridOrderStyle}">
             <DataGrid.Resources>
                 <Style TargetType="{x:Type DataGridCell}">
                     <Style.Triggers>
@@ -49,47 +54,49 @@
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата" Binding="{Binding CreatedDateTime}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="Идентификатор" Binding="{Binding OrderId}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="№ произв. заказа" Binding="{Binding ProductionOrderId}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="Кол. товаров" Binding="{Binding TotalBuffers}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="Кол. КМ" Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="Доступно КМ" Binding="{Binding TotalAvailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                <DataGridTextColumn Header="Статус" Binding="{Binding OrderStatusText}" ElementStyle="{StaticResource DataGridVerticalText}"/>
+                <DataGridTextColumn Header="Дата" Width="120" TextBlock.TextAlignment="Center" Binding="{Binding CreatedDateTime}" ElementStyle="{StaticResource DataGridDateStyle}"/>
+                <DataGridTextColumn Header="Идентификатор" Width="120" Binding="{Binding OrderId}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                <DataGridTextColumn Header="№ произв. заказа" Width="120" Binding="{Binding ProductionOrderId}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                <DataGridTextColumn Header="Кол. товаров" Width="85" Binding="{Binding TotalBuffers}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                <DataGridTextColumn Header="Кол. КМ" Width="85" Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                <DataGridTextColumn Header="Доступно КМ" Width="85" Binding="{Binding TotalAvailableCodes}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                <DataGridTextColumn Header="Статус" Width="200" Binding="{Binding OrderStatusText}" ElementStyle="{StaticResource DataGridTextStyle}"/>
             </DataGrid.Columns>
             <DataGrid.RowDetailsTemplate>
                 <DataTemplate>
-                    <Grid Margin="4">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="200"/>
-                                <ColumnDefinition Width="200"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="Идентификатор заказа:" VerticalAlignment="Center" FontWeight="Bold" />
-                            <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
-                            <Button Grid.Column="3" Content="Распечатать 1 код маркировки" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
-                            <Button Grid.Column="4" Content="Распечатать все доступные" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                    <Border Background="#FFEFEFEF" BorderThickness="1" BorderBrush="Silver">
+                        <Grid Margin="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="200"/>
+                                    <ColumnDefinition Width="200"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Идентификатор заказа:" VerticalAlignment="Center" FontWeight="Bold" />
+                                <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
+                                <Button Grid.Column="3" Content="Распечатать 1 код маркировки" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
+                                <Button Grid.Column="4" Content="Распечатать все доступные" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                            </Grid>
+                            <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding Buffers}" SelectedItem="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentBufferInfo}"  Style="{StaticResource DataGridOrderStyle}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Код товара" Width="200" Binding="{Binding Gtin}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Наименование товара" Width="200" Binding="{Binding FullName}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Всего" Width="85"  Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Доступно" Width="85" Binding="{Binding AvailableCodes}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Получено" Width="85" Binding="{Binding TotalPassed}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Недоступно" Width="85" Binding="{Binding UnavailableCodes}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Срок" Width="120" Binding="{Binding ExpiredDateTime}" ElementStyle="{StaticResource DataGridCenterText}"/>
+                                    <DataGridTextColumn Header="Статус" Width="200" Binding="{Binding BufferStatusText}" ElementStyle="{StaticResource DataGridTextStyle}"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </Grid>
-                        <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding Buffers}" SelectedItem="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentBufferInfo}"  Style="{StaticResource DataGridOrderStyle}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Код товара" Binding="{Binding Gtin}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Наименование товара" Binding="{Binding FullName}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Всего" Binding="{Binding TotalCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Доступно" Binding="{Binding AvailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Получено" Binding="{Binding TotalPassed}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Недоступно" Binding="{Binding UnavailableCodes}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Срок" Binding="{Binding ExpiredDateTime}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                                <DataGridTextColumn Header="Статус" Binding="{Binding BufferStatusText}" ElementStyle="{StaticResource DataGridVerticalText}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
+                    </Border>
                 </DataTemplate>
             </DataGrid.RowDetailsTemplate>
         </DataGrid>

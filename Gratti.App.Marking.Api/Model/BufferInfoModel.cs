@@ -6,22 +6,21 @@ using Gratti.App.Marking.Core.Extensions;
 
 namespace Gratti.App.Marking.Api.Model
 {
-    public enum BufferStatusEnum
-    {
-        [Display(Name = "В ожидании")]
-        PENDING,
-        [Display(Name = "Готов к печати")]
-        ACTIVE,
-        [Display(Name = "Исчерпан")]
-        EXHAUSTED,
-        [Display(Name = "Не доступен")]
-        REJECTED,
-        [Display(Name = "Закрыт")]
-        CLOSED
-    }
-
     public class BufferInfoModel
     {
+        public enum BufferStatusEnum
+        {
+            [Display(Name = "В ожидании")]
+            PENDING,
+            [Display(Name = "Готов к печати")]
+            ACTIVE,
+            [Display(Name = "Исчерпан")]
+            EXHAUSTED,
+            [Display(Name = "Не доступен")]
+            REJECTED,
+            [Display(Name = "Закрыт")]
+            CLOSED
+        }
 
         public BufferInfoModel()
         {

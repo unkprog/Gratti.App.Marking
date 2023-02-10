@@ -27,6 +27,7 @@ namespace Gratti.App.Marking.Views.Controls
         public EnterView()
         {
             InitializeComponent();
+            this.DataContext = new EnterViewModel();
         }
 
         EnterViewModel ViewModel => (this.DataContext as EnterViewModel);

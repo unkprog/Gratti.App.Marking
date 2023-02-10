@@ -153,16 +153,9 @@ namespace Gratti.App.Marking.Views.Controls.Models
             return result;
         }
 
-        int _index = 1;
-        public IEnumerable<string> Get()
-        {
-            Thread.Sleep(2000);
-            return new List<string> { $"Article {_index++}" };
-        }
-
         private void Enter()
         {
-            App.Self.MainVM.Run(() =>
+            App.Self.MainVM.RunAsync(() =>
             {
                 string errorMessage = SaveProfiles();
                 //if (!string.IsNullOrEmpty(errorMessage))
@@ -173,8 +166,8 @@ namespace Gratti.App.Marking.Views.Controls.Models
 
 
                 App.Self.SetProfile(CurrentProfile);
-                App.Self.Auth.Connect();
-                App.Self.MainVM.Content = new Oms.OrdersView();
+                //App.Self.Auth.Connect();
+                SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
 
             });
         }
