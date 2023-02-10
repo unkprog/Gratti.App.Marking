@@ -158,15 +158,13 @@ namespace Gratti.App.Marking.Views.Controls.Models
             App.Self.MainVM.RunAsync(() =>
             {
                 string errorMessage = SaveProfiles();
-                //if (!string.IsNullOrEmpty(errorMessage))
-                //{
-                //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
-                //    return;
-                //}
-
-
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    App.Self.MainVM.Error(errorMessage, "Вход в систему");
+                    return;
+                }
                 App.Self.SetProfile(CurrentProfile);
-                //App.Self.Auth.Connect();
+                App.Self.Auth.Connect();
                 SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
 
             });

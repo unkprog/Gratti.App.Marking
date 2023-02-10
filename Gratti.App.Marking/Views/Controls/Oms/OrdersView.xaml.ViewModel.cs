@@ -4,11 +4,6 @@ using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Views.Models;
 using System.Reactive;
 using ReactiveUI;
-using Gratti.App.Marking.Extensions;
-using System.Data.SqlClient;
-using System;
-using System.ComponentModel;
-using System.Windows;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
@@ -16,10 +11,11 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
     {
         public OrdersViewModel()
         {
-
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintOneCurrentOrderInfo()); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllAvalaibleCurrentOrderInfo()); });
+
+            RefreshCommand.Execute();
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
