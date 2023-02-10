@@ -3,13 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Gratti.App.Marking.Views"
-        xmlns:vm="clr-namespace:Gratti.App.Marking.Views.Models"
         mc:Ignorable="d"
-        Title="LogWindow" Height="450" Width="800">
-    <Window.DataContext>
-        <vm:LogWindowViewModel/>
-    </Window.DataContext>
+        Title="LogWindow" Height="450" Width="800" Icon="/Images/log.png">
+
     <ItemsControl ItemsSource="{Binding Items}" Background="Black">
         <ItemsControl.ItemTemplate>
             <DataTemplate>

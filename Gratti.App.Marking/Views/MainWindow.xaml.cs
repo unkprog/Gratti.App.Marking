@@ -26,9 +26,8 @@ namespace Gratti.App.Marking.Views
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
-
-        MainWindowViewModel ViewModel => (this.DataContext as MainWindowViewModel);
 
         private void logButton_Click(object sender, RoutedEventArgs e)
         {
