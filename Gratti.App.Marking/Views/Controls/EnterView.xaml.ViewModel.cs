@@ -12,6 +12,9 @@ using ReactiveUI;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Utils;
 using Gratti.App.Marking.Views.Models;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -152,24 +155,36 @@ namespace Gratti.App.Marking.Views.Controls.Models
             return result;
         }
 
+        int _index = 1;
+        public IEnumerable<string> Get()
+        {
+            Thread.Sleep(2000);
+            return new List<string> { $"Article {_index++}" };
+        }
+
         private void Enter()
         {
-            string errorMessage = SaveProfiles();
-            if (!string.IsNullOrEmpty(errorMessage))
-            {
-                App.Self.MainVM.Error(errorMessage, "Вход в систему");
-                return;
-            }
-
             App.Self.MainVM.Run(() =>
             {
-                Application.Current.Dispatcher.Invoke(() =>
+                string errorMessage = SaveProfiles();
+                //if (!string.IsNullOrEmpty(errorMessage))
+                //{
+                //    App.Self.MainVM.Error(errorMessage, "Вход в систему");
+                //    return;
+                //}
+
+                App.Self.MainVM.Run(() =>
                 {
-                    App.Self.SetProfile(CurrentProfile);
-                    App.Self.Auth.Connect();
-                    App.Self.MainVM.Content = new Oms.OrdersView();
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        App.Self.SetProfile(CurrentProfile);
+                        App.Self.Auth.Connect();
+                        App.Self.MainVM.Content = new Oms.OrdersView();
+                    });
                 });
             });
         }
+
+
     }
 }

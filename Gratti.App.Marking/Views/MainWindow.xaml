@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Gratti.App.Marking"
         xmlns:vm="clr-namespace:Gratti.App.Marking.Views.Models"      
         mc:Ignorable="d"
-        Title="Гратти.Маркировка" Width="1024" Height="768" WindowStartupLocation="CenterScreen" Icon="/logo.png">
+        Title="Гратти.Маркировка" Width="1024" Height="768" WindowStartupLocation="CenterScreen" Icon="/logo.png"
+        Closed="Window_Closed">
     <Window.Resources>
         <vm:MainWindowViewModel x:Key="MainWindowVM"/>
     </Window.Resources>
@@ -30,7 +31,7 @@
             <Button Name="logButton" Margin="3 0 0 0 " Click="logButton_Click">Log</Button>
         </Grid>
 
-        <Grid Grid.RowSpan="2" Visibility="{Binding VisibilityBusy, Mode=TwoWay}" Background="#AF000000">
+        <Grid x:Name="GridBusy" Grid.RowSpan="2" Visibility="{Binding VisibilityBusy, Mode=TwoWay}" Background="#AF000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>

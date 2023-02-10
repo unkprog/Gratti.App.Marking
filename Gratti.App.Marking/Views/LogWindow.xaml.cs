@@ -23,5 +23,16 @@ namespace Gratti.App.Marking.Views
         {
             InitializeComponent();
         }
+
+        static LogWindow _self;
+        public static LogWindow Self
+        {
+            get
+            {
+                if (_self == null)
+                    _self = new LogWindow();
+                return _self;
+            }
+        }
     }
 }

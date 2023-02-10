@@ -1,5 +1,6 @@
 ﻿using Gratti.App.Marking.Views.Controls.Models;
 using Gratti.App.Marking.Views.Models;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,8 @@ namespace Gratti.App.Marking.Views
         public MainWindow()
         {
             InitializeComponent();
+           
+
             ViewModel.Log("MainWindow");
         }
 
@@ -32,8 +35,12 @@ namespace Gratti.App.Marking.Views
 
         private void logButton_Click(object sender, RoutedEventArgs e)
         {
-            LogWindow lw = new LogWindow();
-            lw.Show();
+            LogWindow.Self.Show();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
