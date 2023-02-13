@@ -24,5 +24,10 @@ namespace Gratti.App.Marking.Views
                 return _self;
             }
         }
+
+        private void Window_Closed(object sender, System.EventArgs e)
+        {
+            _self = null;
+        }
     }
 }
