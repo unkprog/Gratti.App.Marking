@@ -1,5 +1,6 @@
-﻿using Gratti.App.Marking.Core.Interfaces;
+﻿using System;
 using System.Collections.ObjectModel;
+using Gratti.App.Marking.Core.Interfaces;
 
 namespace Gratti.App.Marking.Views.Models
 {
@@ -11,7 +12,7 @@ namespace Gratti.App.Marking.Views.Models
 
         public void Log(string logRecord)
         {
-            SyncThread(() => LogItems.Insert(0, logRecord));
+            SyncThread(() => LogItems.Insert(0, string.Concat(DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss"), ": ", logRecord)));
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public OrdersViewModel()
         {
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
-            PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintOneCurrentOrderInfo()); });
-            PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllAvalaibleCurrentOrderInfo()); });
+            PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
+            PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
             App.Self.MainVM.RunAsync(() => Refresh());
         }
 
@@ -48,11 +48,23 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public BufferInfoModel CurrentBufferInfo
         {
             get { return currentBufferInfo; }
-            set { this.RaiseAndSetIfChanged(ref currentBufferInfo, value); }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref currentBufferInfo, value);
+                this.RaisePropertyChanged("IsCurrentBufferInfo");
+            }
         }
+
+        public bool IsCurrentBufferInfo
+        {
+            get { return currentBufferInfo != null; }
+        }
+
+        
 
         public void Refresh()
         {
+            Log("Получение списка заказов...");
             OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
             ordersResponse.Orders.Sort((x, y) => { return y.CreatedDateTime.CompareTo(x.CreatedDateTime); });
 
@@ -73,49 +85,44 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 if (this.Orders.Count > 0)
                     this.CurrentOrderInfo = this.Orders[0];
                 });
+            Log("Получено заказов: " + this.Orders.Count.ToString() + "...");
         }
 
-        private void PrintOneCurrentOrderInfo()
+        private void PrintCurrentOrderInfo(int aCount)
         {
             if (CurrentOrderInfo == null)
+            {
+                App.Self.MainVM.Info("Заказ не выбран...");
                 return;
+            }
 
+            Log("Сохрание кодов маркировки...");
+            int iCount = 0;
             foreach (BufferInfoModel buffer in CurrentOrderInfo.Buffers)
             {
-                if (buffer.AvailableCodes > 0)
+                if (buffer.AvailableCodes > 0 && (aCount == -1 || iCount < aCount))
                 {
                     CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, 1);
                     foreach (string dmcode in codes.Codes)
                     {
                         DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
                         SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
+                        iCount++;
+                        if (aCount != -1 && iCount >= aCount)
+                            break;
                     }
+                    Log("Сохранено кодов маркировки: " + codes.Codes.Count.ToString() + " шт...");
+                }
+                if (aCount != -1 && iCount >= aCount)
                     break;
-                }
             }
+
+            if (aCount != -1 && iCount < aCount)
+                App.Self.MainVM.Info("Сохранено " + iCount.ToString() + " из заданных " + (aCount == -1 ? iCount : aCount).ToString() + " ...");
+
+            Log("Сохрание кодов маркировки завершено...");
             Refresh();
         }
-
-        private void PrintAllAvalaibleCurrentOrderInfo()
-        {
-            if (CurrentOrderInfo == null)
-                return;
-
-            foreach (BufferInfoModel buffer in CurrentOrderInfo.Buffers)
-            {
-                if (buffer.AvailableCodes > 0)
-                {
-                    CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
-                    foreach (string dmcode in codes.Codes)
-                    {
-                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString(), Barcode = CurrentOrderInfo.ProductionOrderId };
-                        SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
-                    }
-                }
-            }
-            Refresh();
-        }
-
 
     }
 }

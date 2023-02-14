@@ -34,6 +34,13 @@ namespace Gratti.App.Marking.Views.Models
             return;
         }
 
+        public void Info(string infoMessage, string aTitle = "Гратти.Маркировка")
+        {
+            Log(infoMessage);
+            MessageBox.Show(infoMessage, aTitle, MessageBoxButton.OK, MessageBoxImage.Information);
+            return;
+        }
+
         public void RunAsync(Action action)
         {
             var runCommand = ReactiveCommand.CreateFromTask(_ => Task.Run(action));
