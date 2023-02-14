@@ -105,7 +105,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                     CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, 1);
                     foreach (string dmcode in codes.Codes)
                     {
-                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
+                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString(), Barcode = buffer.ProductInfo?.RawOrigin };
                         SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
                         iCount++;
                         if (aCount != -1 && iCount >= aCount)
