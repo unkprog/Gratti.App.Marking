@@ -41,7 +41,7 @@ namespace Gratti.App.Marking.Views.Models
             return;
         }
 
-        public void RunAsync(Action action)
+        public void RunAsync(Action action, Action<Exception> errorAction = null)
         {
             var runCommand = ReactiveCommand.CreateFromTask(_ => Task.Run(action));
             runCommand.ThrownExceptions.Subscribe((ex) =>

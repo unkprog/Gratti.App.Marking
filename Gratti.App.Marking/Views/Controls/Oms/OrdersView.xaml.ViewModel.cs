@@ -88,6 +88,14 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             Log("Получено заказов: " + this.Orders.Count.ToString() + "...");
         }
 
+
+        //private void UpdateCis()
+        //{
+        //    model.Barcode = buffer.ProductInfo?.RawOrigin;
+        //    if (string.IsNullOrEmpty(model.Barcode))
+        //        model.Barcode = CurrentOrderInfo.ProductionOrderId;
+        //}
+
         private void PrintCurrentOrderInfo(int aCount)
         {
             if (CurrentOrderInfo == null)
@@ -105,7 +113,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                     CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, 1);
                     foreach (string dmcode in codes.Codes)
                     {
-                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString(), Barcode = buffer.ProductInfo?.RawOrigin };
+                        DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
+
+                        model.Barcode = buffer.ProductInfo?.RawOrigin;
+                        if (string.IsNullOrEmpty(model.Barcode))
+                            model.Barcode = CurrentOrderInfo.ProductionOrderId;
+
                         SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
                         iCount++;
                         if (aCount != -1 && iCount >= aCount)

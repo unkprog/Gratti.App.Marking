@@ -164,8 +164,18 @@ namespace Gratti.App.Marking.Views.Controls.Models
                     return;
                 }
                 App.Self.SetProfile(CurrentProfile);
-                App.Self.Auth.Connect();
-                SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
+                bool isConnected = false;
+                try
+                {
+                    App.Self.Auth.Connect();
+                    isConnected = true;
+                }
+                catch(Exception)
+                {
+                    SyncThread(() => App.Self.MainVM.Error("Не удалось подключиться! " + Environment.NewLine + "Проверьте настройки."));
+                }
+                if (isConnected)
+                    SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
 
             });
         }
