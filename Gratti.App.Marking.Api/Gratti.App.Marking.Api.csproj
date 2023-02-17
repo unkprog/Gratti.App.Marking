@@ -70,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cmg.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Model\BufferInfoModel.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Model\OrderProductInfoModel.cs" />
     <Compile Include="Model\OrdersModel.cs" />
     <Compile Include="Model\PoolInfoModel.cs" />
+    <Compile Include="Model\ProductModel.cs" />
     <Compile Include="Oms.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

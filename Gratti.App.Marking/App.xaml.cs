@@ -28,11 +28,13 @@ namespace Gratti.App.Marking
 
         public AuthService Auth { get; private set; }
         public Oms OmsApi { get; private set; }
+        public Cmg CmgApi { get; private set; }
 
         public void SetProfile(ProfileInfoModel profile)
         {
             Auth = new AuthService(profile, MainVM);
             OmsApi = new Oms(profile.OmsUri, profile.OmsId);
+            CmgApi = new Cmg(profile.CmgUri, profile.ApiKey);
         }
 
     }

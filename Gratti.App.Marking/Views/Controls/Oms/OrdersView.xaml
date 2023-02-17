@@ -88,7 +88,8 @@
                 <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
                     <Button Width="200" Content="Распечатать 1 код маркировки" IsEnabled="{Binding IsCurrentBufferInfo}" VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
-                    <Button Width="200"  Content="Распечатать все доступные" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                    <Button Width="200" Content="Распечатать все доступные" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                    <Button Width="200" Content="Проверка инфо" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.CheckCurrentOrderInfoCommand}"/>
                 </StackPanel>
             </Grid>
             <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding CurrentOrderInfo.Buffers}" SelectedItem="{Binding CurrentBufferInfo}" >

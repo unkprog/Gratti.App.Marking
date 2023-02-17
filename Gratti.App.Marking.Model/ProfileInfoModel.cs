@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gratti.App.Marking.Model
+﻿namespace Gratti.App.Marking.Model
 {
     public class ProfileInfoModel
     {
@@ -17,9 +11,12 @@ namespace Gratti.App.Marking.Model
 
         public string OmsUri { get; set; }
 
+        public string CmgUri { get; set; }
+
         public string OmsId { get; set; }
 
         public string ConnectionId { get; set; }
+        public string ApiKey { get; set; }
 
         public string ThumbPrint { get; set; }
 

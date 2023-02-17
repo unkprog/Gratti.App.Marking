@@ -13,6 +13,7 @@ using Gratti.App.Marking.Utils;
 using Gratti.App.Marking.Views.Models;
 using System.Collections.Generic;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -73,6 +74,16 @@ namespace Gratti.App.Marking.Views.Controls.Models
             }
         }
 
+        public string ApiKey
+        {
+            get { return CurrentProfile?.ApiKey; }
+            set
+            {
+                if (CurrentProfile != null)
+                    CurrentProfile.ApiKey = value;
+            }
+        }
+
         public string SqlConnectionString
         {
             get { return CurrentProfile?.SqlConnectionString; }
@@ -103,15 +114,24 @@ namespace Gratti.App.Marking.Views.Controls.Models
                         Name = "Тестовый сервер (https://markirovka.sandbox.crptech.ru)",
                         GisUri = "https://markirovka.sandbox.crptech.ru",
                         OmsUri = "https://suz.sandbox.crptech.ru",
+                        CmgUri = "https://api.integrators.nk.crpt.tech"
                     },
                     Prod = new ProfileInfoModel
                     {
                         Name = "Основной сервер (https://markirovka.crpt.ru)",
                         GisUri = "https://markirovka.crpt.ru",
                         OmsUri = "https://suzgrid.crpt.ru",
+                        CmgUri = "https://апи.национальный-каталог.рф"
                     },
                     Current = "Dev"
                 };
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(setting.Dev.CmgUri))
+                    setting.Dev.CmgUri = "https://api.integrators.nk.crpt.tech";
+                if (string.IsNullOrEmpty(setting.Prod.CmgUri))
+                    setting.Prod.CmgUri = "https://апи.национальный-каталог.рф";
             }
 
             Profiles.Add(setting.Dev);
@@ -144,6 +164,9 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 appendResult("Укажите идентификатор СУЗ (Oms Id)");
             if (string.IsNullOrEmpty(CurrentProfile.ConnectionId))
                 appendResult("Укажите идентификатор подключения (Connection Id)");
+            if (string.IsNullOrEmpty(CurrentProfile.ApiKey))
+                appendResult("Укажите ключ API ГИСМТ (ApiKey)");
+            
             if (string.IsNullOrEmpty(CurrentProfile.SqlConnectionString))
                 appendResult("Укажите строку подключения SQL");
 

@@ -15,12 +15,15 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
+            CheckCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CheckCurrentOrderInfo()); });
             App.Self.MainVM.RunAsync(() => Refresh());
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
         public ReactiveCommand<Unit, Unit> PrintOneCurrentOrderInfoCommand { get; }
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
+
+        public ReactiveCommand<Unit, Unit> CheckCurrentOrderInfoCommand { get; }
 
         public CertificateInfoModel Certificate
         {
@@ -89,12 +92,21 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         }
 
 
-        //private void UpdateCis()
-        //{
-        //    model.Barcode = buffer.ProductInfo?.RawOrigin;
-        //    if (string.IsNullOrEmpty(model.Barcode))
-        //        model.Barcode = CurrentOrderInfo.ProductionOrderId;
-        //}
+        private void CheckCurrentOrderInfo()
+        {
+            if (CurrentOrderInfo == null)
+            {
+                App.Self.MainVM.Info("Заказ не выбран...");
+                return;
+            }
+
+            if (CurrentOrderInfo.Buffers.Count > 0)
+            {
+                BufferInfoModel buffer = CurrentOrderInfo.Buffers[0];
+                ProductModel product = App.Self.CmgApi.ProductByGtin(buffer.ProductInfo.GTIN);
+                Log("Test " + product.Name);
+            }
+        }
 
         private void PrintCurrentOrderInfo(int aCount)
         {
