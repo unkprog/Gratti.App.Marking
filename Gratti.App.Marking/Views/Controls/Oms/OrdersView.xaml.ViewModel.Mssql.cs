@@ -70,7 +70,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                    , Environment.NewLine, "  select @DocID = isnull(max([DocID]), 0) + 1 from [dbo].[GTIN] with(nolock)"
                    , Environment.NewLine, "  insert into [dbo].[GTIN] ([DocID], [ExtID], [Deleted], [ModifyDate], [Version], [Gtin], [Тип])"
                    , Environment.NewLine, "  select [DocID] = @DocID, [ExtID] = ltrim(rtrim(str(@DocID))), [Deleted] = 0, [ModifyDate] = getdate(), [Version] = 0"
-                   , Environment.NewLine, "       , [Gtin] = @Gtin, [Тип] = 1"
+                   , Environment.NewLine, "       , [Gtin] = @Gtin, [Тип] = 0"
                    , Environment.NewLine, "end"
                    , Environment.NewLine, "select @DocID");
 

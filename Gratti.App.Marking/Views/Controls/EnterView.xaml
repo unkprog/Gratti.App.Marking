@@ -38,6 +38,7 @@
                 <RowDefinition Height="24" />
                 <RowDefinition Height="15" />
                 <RowDefinition Height="24" />
+                <RowDefinition Height="24" />
             </Grid.RowDefinitions>
             <TextBlock Grid.ColumnSpan="2" Text="Профиль подключения" VerticalAlignment="Center" />
             <ComboBox Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding Profiles}" SelectedItem="{Binding CurrentProfile, Mode=TwoWay}">
@@ -79,6 +80,7 @@
 
 
             <Button Name="EnterButton" Grid.Row="14" Grid.ColumnSpan="2" Width="125" HorizontalAlignment="Right" Command="{Binding EnterCommand}">Войти в систему</Button>
+            <Button Name="TestButton" Grid.Row="15" Grid.ColumnSpan="2" Width="125" HorizontalAlignment="Right" Command="{Binding TestNKCommand}">Тест НК</Button>
         </Grid>
     </Grid>
 

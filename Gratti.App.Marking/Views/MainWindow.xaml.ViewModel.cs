@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows;
 using ReactiveUI;
+using System.Reflection;
 
 namespace Gratti.App.Marking.Views.Models
 {
@@ -19,13 +20,31 @@ namespace Gratti.App.Marking.Views.Models
             get { return visibilityBusy; }
             set { this.RaiseAndSetIfChanged(ref visibilityBusy, value); }
         }
-        
+
+
+        private string textBusy = string.Empty;
+        public string TextBusy
+        {
+            get { return textBusy; }
+            set { this.RaiseAndSetIfChanged(ref textBusy, value); }
+        }
+
+        public string VersionApp
+        {
+            get
+            {
+                return "Версия: " + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            }
+        }
+
         private int countBusy = 0;
         public void Busy(bool aIsShow, bool aIsReset = false)
         {
             countBusy = (!aIsShow && aIsReset ? 0 : countBusy + (aIsShow ? 1 : -1));
             countBusy = (countBusy < 0 ? 0 : countBusy);
             VisibilityBusy = (countBusy > 0 ? Visibility.Visible : Visibility.Collapsed);
+            if (VisibilityBusy == Visibility.Collapsed)
+                TextBusy = string.Empty;
         }
         public void Error(string errorMessage, string aTitle = "Гратти.Маркировка")
         {

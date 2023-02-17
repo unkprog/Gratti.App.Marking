@@ -89,7 +89,7 @@
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
                     <Button Width="200" Content="Распечатать 1 код маркировки" IsEnabled="{Binding IsCurrentBufferInfo}" VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
                     <Button Width="200" Content="Распечатать все доступные" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
-                    <Button Width="200" Content="Проверка инфо" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.CheckCurrentOrderInfoCommand}"/>
+                    <!--<Button Width="200" Content="Проверка инфо" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.CheckCurrentOrderInfoCommand}"/>-->
                 </StackPanel>
             </Grid>
             <DataGrid Grid.Row="1" Margin="0 4 0 0" ItemsSource="{Binding CurrentOrderInfo.Buffers}" SelectedItem="{Binding CurrentBufferInfo}" >
@@ -107,6 +107,10 @@
         </Grid>
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="0 4 0 0" >
             <Button Width="100" Content="Обновить" Margin="4 4 4 0" Command="{Binding RefreshCommand}" />
+            <Button Width="100" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"  >
+                <TextBlock Text="Распечатать все доступные" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Button>
+
         </StackPanel>
     </Grid>
 </UserControl>

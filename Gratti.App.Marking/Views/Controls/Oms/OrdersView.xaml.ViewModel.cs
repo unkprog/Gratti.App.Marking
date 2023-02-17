@@ -13,17 +13,20 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public OrdersViewModel()
         {
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
+            PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
-            CheckCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CheckCurrentOrderInfo()); });
+            //CheckCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CheckCurrentOrderInfo()); });
             App.Self.MainVM.RunAsync(() => Refresh());
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
+        public ReactiveCommand<Unit, Unit> PrintAllAvalaibleOrdersInfoCommand { get; }
+        
         public ReactiveCommand<Unit, Unit> PrintOneCurrentOrderInfoCommand { get; }
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
 
-        public ReactiveCommand<Unit, Unit> CheckCurrentOrderInfoCommand { get; }
+        //public ReactiveCommand<Unit, Unit> CheckCurrentOrderInfoCommand { get; }
 
         public CertificateInfoModel Certificate
         {
@@ -37,8 +40,18 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public List<OrderInfoModel> Orders
         {
             get { return orders; }
-            set { this.RaiseAndSetIfChanged(ref orders, value); }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref orders, value);
+                this.RaisePropertyChanged("IsAvalaibleOrders");
+            }
         }
+
+        public bool IsAvalaibleOrders
+        {
+            get { return this.Orders != null && this.Orders.Count > 0 && this.Orders.Exists((f)=> f.Buffers.Exists((b)=> b.AvailableCodes > 0)); }
+        }
+
 
         private OrderInfoModel currentOrderInfo;
         public OrderInfoModel CurrentOrderInfo
@@ -68,6 +81,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public void Refresh()
         {
             Log("Получение списка заказов...");
+            SyncThread(() => App.Self.MainVM.TextBusy = "Получение списка заказов...");
             OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
             ordersResponse.Orders.Sort((x, y) => { return y.CreatedDateTime.CompareTo(x.CreatedDateTime); });
 
@@ -91,22 +105,57 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             Log("Получено заказов: " + this.Orders.Count.ToString() + "...");
         }
 
-
-        private void CheckCurrentOrderInfo()
+        private void PrintAllOrderInfo()
         {
-            if (CurrentOrderInfo == null)
+            Log("Сохрание кодов маркировки...");
+            if (this.Orders == null || this.Orders.Count < 1)
             {
-                App.Self.MainVM.Info("Заказ не выбран...");
+                App.Self.MainVM.Info("Нет заказов для сохранения...");
                 return;
             }
 
-            if (CurrentOrderInfo.Buffers.Count > 0)
+            foreach (OrderInfoModel order in this.Orders)
             {
-                BufferInfoModel buffer = CurrentOrderInfo.Buffers[0];
-                ProductModel product = App.Self.CmgApi.ProductByGtin(buffer.ProductInfo.GTIN);
-                Log("Test " + product.Name);
+                SyncThread(() => App.Self.MainVM.TextBusy = "Сохрание КМ по заказу " + CurrentOrderInfo.OrderId + "...");
+
+                foreach (BufferInfoModel buffer in order.Buffers)
+                {
+                    if (buffer.AvailableCodes > 0)
+                    {
+                        CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
+                        foreach (string dmcode in codes.Codes)
+                        {
+                            DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
+
+                            model.Barcode = buffer.ProductInfo?.RawOrigin;
+                            if (string.IsNullOrEmpty(model.Barcode))
+                                model.Barcode = CurrentOrderInfo.ProductionOrderId;
+
+                            SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
+                        }
+                        Log("Сохранено кодов маркировки: " + codes.Codes.Count.ToString() + " шт...");
+                    }
+                }
             }
+            Log("Сохрание кодов маркировки завершено...");
+            Refresh();
         }
+
+        //private void CheckCurrentOrderInfo()
+        //{
+        //    if (CurrentOrderInfo == null)
+        //    {
+        //        App.Self.MainVM.Info("Заказ не выбран...");
+        //        return;
+        //    }
+
+        //    if (CurrentOrderInfo.Buffers.Count > 0)
+        //    {
+        //        BufferInfoModel buffer = CurrentOrderInfo.Buffers[0];
+        //        ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
+        //        Log("Test " + product.Name);
+        //    }
+        //}
 
         private void PrintCurrentOrderInfo(int aCount)
         {
@@ -116,13 +165,15 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 return;
             }
 
-            Log("Сохрание кодов маркировки...");
-            int iCount = 0;
+            Log("Сохрание КМ по заказу " + CurrentOrderInfo.OrderId + "...");
+            SyncThread(() => App.Self.MainVM.TextBusy = "Сохрание КМ по заказу " + CurrentOrderInfo .OrderId + "...");
+
+            int dCount = aCount;
             foreach (BufferInfoModel buffer in CurrentOrderInfo.Buffers)
             {
-                if (buffer.AvailableCodes > 0 && (aCount == -1 || iCount < aCount))
+                if (buffer.AvailableCodes > 0 && (dCount == -1 || dCount > 0))
                 {
-                    CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, 1);
+                    CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, dCount == -1 || buffer.AvailableCodes < dCount? buffer.AvailableCodes : dCount);
                     foreach (string dmcode in codes.Codes)
                     {
                         DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
@@ -132,18 +183,19 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                             model.Barcode = CurrentOrderInfo.ProductionOrderId;
 
                         SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
-                        iCount++;
-                        if (aCount != -1 && iCount >= aCount)
+                        dCount--;
+
+                        if (dCount != -1 && dCount == 0)
                             break;
                     }
                     Log("Сохранено кодов маркировки: " + codes.Codes.Count.ToString() + " шт...");
                 }
-                if (aCount != -1 && iCount >= aCount)
+                if (dCount != -1 && dCount == 0)
                     break;
             }
 
-            if (aCount != -1 && iCount < aCount)
-                App.Self.MainVM.Info("Сохранено " + iCount.ToString() + " из заданных " + (aCount == -1 ? iCount : aCount).ToString() + " ...");
+            if (dCount != -1 && dCount > 0)
+                App.Self.MainVM.Info("Сохранено " + (aCount - dCount).ToString() + " из заданных " + aCount.ToString() + " ...");
 
             Log("Сохрание кодов маркировки завершено...");
             Refresh();

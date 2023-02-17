@@ -14,6 +14,7 @@ using Gratti.App.Marking.Views.Models;
 using System.Collections.Generic;
 using System.Threading;
 using System.Security.Cryptography;
+using Gratti.App.Marking.Api.Model;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -23,9 +24,12 @@ namespace Gratti.App.Marking.Views.Controls.Models
         {
             LoadProfiles();
             EnterCommand = ReactiveCommand.Create(() => { Task.Run(() => Enter()); });
+            TestNKCommand = ReactiveCommand.Create(() => { Task.Run(() => TestNK()); });
         }
 
         public ReactiveCommand<Unit, Unit> EnterCommand { get; }
+        public ReactiveCommand<Unit, Unit> TestNKCommand { get; }
+
 
         public ObservableCollection<ProfileInfoModel> Profiles { get; private set; } = new ObservableCollection<ProfileInfoModel>();
 
@@ -137,7 +141,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
             Profiles.Add(setting.Dev);
             Profiles.Add(setting.Prod);
 
-            CurrentProfile = (setting.Current == "Dev" ? setting.Dev: setting.Prod);
+            CurrentProfile = (setting.Current == "Dev" ? setting.Dev : setting.Prod);
         }
 
         public string SaveProfiles()
@@ -166,7 +170,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 appendResult("Укажите идентификатор подключения (Connection Id)");
             if (string.IsNullOrEmpty(CurrentProfile.ApiKey))
                 appendResult("Укажите ключ API ГИСМТ (ApiKey)");
-            
+
             if (string.IsNullOrEmpty(CurrentProfile.SqlConnectionString))
                 appendResult("Укажите строку подключения SQL");
 
@@ -180,6 +184,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
         {
             App.Self.MainVM.RunAsync(() =>
             {
+                SyncThread(() => App.Self.MainVM.TextBusy = "Сохранение профиля");
                 string errorMessage = SaveProfiles();
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
@@ -190,10 +195,11 @@ namespace Gratti.App.Marking.Views.Controls.Models
                 bool isConnected = false;
                 try
                 {
+                    SyncThread(() => App.Self.MainVM.TextBusy = "Подключение");
                     App.Self.Auth.Connect();
                     isConnected = true;
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     SyncThread(() => App.Self.MainVM.Error("Не удалось подключиться! " + Environment.NewLine + "Проверьте настройки."));
                 }
@@ -203,6 +209,16 @@ namespace Gratti.App.Marking.Views.Controls.Models
             });
         }
 
+        private void TestNK()
+        {
+            App.Self.MainVM.RunAsync(() =>
+            {
+                App.Self.SetProfile(CurrentProfile);
+                ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
+                Log("Test " + product.Name);
+
+            });
+        }
 
     }
 }

@@ -22,16 +22,21 @@ namespace Gratti.App.Marking.Api
             T result;
             using (HttpClient client = new HttpClient())
             {
-                client.BaseAddress = new Uri(string.Concat(baseUrl, "/v3", method, "?apikey=", apiKey, query));
+                client.BaseAddress = new Uri(string.Concat(baseUrl, "/v3", method, "?apikey=", apiKey, query)); //, "&format=json"
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 result = client.GetJson<T>("");
             }
             return result;
         }
+        //public ProductModel ProductByGtin(string gtin)
+        //{
+        //    return Get<ProductModel>("/rest/session", string.Concat("&gtin=", gtin));
+        //}
 
+        
         public ProductModel ProductByGtin(string gtin)
         {
-            return Get<ProductModel>("/product", string.Concat("&gtin=", gtin));
+            return Get<ProductModel>("/product", string.Concat("&gtin=", gtin.EscapeUriDataStringRfc3986()));
         }
     }
 }
