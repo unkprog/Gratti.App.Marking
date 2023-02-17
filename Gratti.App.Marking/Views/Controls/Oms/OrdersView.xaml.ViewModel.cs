@@ -137,5 +137,75 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             Refresh();
         }
 
+
+        // https://xn--j1ab.xn----7sbabas4ajkhfocclk9d3cvfsa.xn--p1ai/rest/tabs/goods/175630239
+        // x-csrf-token: z7u81ueznjbtabmbxlqn8vbz95yy1o8zjz826ryhhn7fufe06zlrbawe7349hj8r
+
+
+//        {
+//  "pageSize": 10,
+//  "pageNumber": 1,
+//  "sort": {
+//    "field": "created",
+//    "direction": "DESC"
+//  },
+//  "fields": [
+//    "type",
+//    "photo",
+//    "created",
+//    "gtin",
+//    "name",
+//    "category",
+//    "packages",
+//    "brand",
+//    "markingCondition",
+//    "status"
+//  ],
+//  "filter": {
+//    "gtin": [
+//      "04603702421225"
+//    ]
+//    }
+//}
+
+
+
+
+
+//        {
+//  "data": [
+//    {
+//      "goods": {
+//        "id": 175630239,
+//        "goodId": 175630239,
+//        "status": "published",
+//        "link": "https://национальный-каталог.рф/product/4603702421225-ru-kurtka-zhenskaya",
+//        "preVersion": 0,
+//        "indexing": 0,
+//        "isMarking": true,
+//        "type": "unit",
+//        "photo": {
+//          "url": "",
+//          "previewUrl": ""
+//        },
+//        "created": "2023-02-10T10:55:28+03:00",
+//        "gtin": "4603702421225",
+//        "name": "Куртка женская",
+//        "category": "Одежда",
+//        "packages": [],
+//        "brand": "21208",
+//        "markingCondition": "turn"
+//      },
+//      "draft": null
+//    }
+//  ],
+//  "isGs1Loads": true,
+//  "totalObjects": 1,
+//  "totalPages": 1
+//}
+
+
+
+
     }
 }
