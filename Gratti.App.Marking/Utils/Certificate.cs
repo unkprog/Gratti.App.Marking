@@ -2,10 +2,11 @@
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Security;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
+using System.Text;
 
 namespace Gratti.App.Marking.Utils
 {
@@ -143,6 +144,25 @@ namespace Gratti.App.Marking.Utils
                 return certificate.SubjectDN.GetValueList(oid2).OfType<string>().FirstOrDefault();
             }
             return null;
+        }
+
+
+        internal static string SignByCertificate(X509Certificate2 cert, string data)
+        {
+            // данные для подписи
+            var content = new System.Security.Cryptography.Pkcs.ContentInfo(Encoding.UTF8.GetBytes(data));
+            var signedCms = new System.Security.Cryptography.Pkcs.SignedCms(content, false);
+
+
+            // настраиваем сертификат для подписи, добавляем дату
+            var signer = new System.Security.Cryptography.Pkcs.CmsSigner(System.Security.Cryptography.Pkcs.SubjectIdentifierType.IssuerAndSerialNumber, cert);
+            signer.SignedAttributes.Add(new System.Security.Cryptography.Pkcs.Pkcs9SigningTime(DateTime.Now));
+
+            // формируем подпись
+            signedCms.ComputeSignature(signer, false);
+            byte[] sign = signedCms.Encode();
+
+            return Convert.ToBase64String(sign);
         }
 
     }

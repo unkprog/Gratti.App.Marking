@@ -139,10 +139,15 @@
     <Compile Include="Services\DataService.cs" />
     <Compile Include="Utils\Certificate.cs" />
     <Compile Include="Utils\IO.cs" />
+    <Compile Include="Utils\TextBoxHelper.cs" />
     <Compile Include="Views\Controls\EnterView.xaml.cs">
       <DependentUpon>EnterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Controls\EnterView.xaml.ViewModel.cs" />
+    <Compile Include="Views\Controls\Oms\OrderNewView.xaml.cs">
+      <DependentUpon>OrderNewView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Controls\Oms\OrderNewView.xaml.ViewModel.cs" />
     <Compile Include="Views\Controls\Oms\OrdersView.xaml.ViewModel.Mssql.cs" />
     <Compile Include="Views\Controls\Oms\OrdersView.xaml.ViewModel.cs" />
     <Compile Include="Views\Controls\Oms\OrdersView.xaml.cs">
@@ -161,11 +166,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Views\Models\BaseViewModel.cs" />
+    <Compile Include="Views\Models\CertViewModel.cs" />
     <Compile Include="Views\Models\ContentViewModel.cs" />
     <Compile Include="Views\Models\LogViewModel.cs" />
     <Page Include="Views\Controls\EnterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Controls\Oms\OrderNewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Controls\Oms\OrdersView.xaml">
       <SubType>Designer</SubType>

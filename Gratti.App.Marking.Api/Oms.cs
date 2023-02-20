@@ -30,6 +30,23 @@ namespace Gratti.App.Marking.Api
             return result;
         }
 
+        private R Post<T, R>(string clientToken, GroupEnum group, string method, T data, string sign = "")
+        {
+            R result;
+            using (HttpClient client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(string.Concat(baseUrl, "/api/v2/", group.ToString(), method, "?omsId=", omsId));
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("clientToken", clientToken);
+                if (!string.IsNullOrEmpty(sign))
+                {
+                    client.DefaultRequestHeaders.Add("X-Signature", sign);
+                }
+                result = client.PostJson<T, R>("", data);
+            }
+            return result;
+        }
+
         public OrdersModel GetOrders(string clientToken, GroupEnum group)
 		{
             return Get<OrdersModel>(clientToken, group, "/orders");
@@ -46,6 +63,11 @@ namespace Gratti.App.Marking.Api
         {
             return Get<CodesModel>(clientToken, group, "/codes", string.Concat("&orderId=", orderId, "&gtin=", gtin, "&quantity=", quantity));
         }
-        
+
+        public OrderResultModel PostOrder(string clientToken, GroupEnum group, OrderNewModel order, string signature = "")
+        {
+            return Post<OrderNewModel, OrderResultModel>(clientToken, group, "/orders", order, signature);
+        }
+
     }
 }

@@ -8,7 +8,7 @@ using System.Reactive.Linq;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
-    public partial class OrdersViewModel : LogViewModel
+    public partial class OrdersViewModel : CertViewModel
     {
         public OrdersViewModel()
         {
@@ -16,7 +16,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
-            //CheckCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CheckCurrentOrderInfo()); });
+            CreateOrderCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CreateOrder()); });
             App.Self.MainVM.RunAsync(() => Refresh());
         }
 
@@ -26,15 +26,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public ReactiveCommand<Unit, Unit> PrintOneCurrentOrderInfoCommand { get; }
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleCurrentOrderInfoCommand { get; }
 
-        //public ReactiveCommand<Unit, Unit> CheckCurrentOrderInfoCommand { get; }
-
-        public CertificateInfoModel Certificate
-        {
-            get
-            {
-                return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.ThumbPrint);
-            }
-        }
+        public ReactiveCommand<Unit, Unit> CreateOrderCommand { get; }
 
         private List<OrderInfoModel> orders;
         public List<OrderInfoModel> Orders
@@ -141,21 +133,10 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             Refresh();
         }
 
-        //private void CheckCurrentOrderInfo()
-        //{
-        //    if (CurrentOrderInfo == null)
-        //    {
-        //        App.Self.MainVM.Info("Заказ не выбран...");
-        //        return;
-        //    }
-
-        //    if (CurrentOrderInfo.Buffers.Count > 0)
-        //    {
-        //        BufferInfoModel buffer = CurrentOrderInfo.Buffers[0];
-        //        ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
-        //        Log("Test " + product.Name);
-        //    }
-        //}
+        private void CreateOrder()
+        {
+            App.Self.MainVM.Content = new Oms.OrderNewView();
+        }
 
         private void PrintCurrentOrderInfo(int aCount)
         {

@@ -8,6 +8,7 @@ using Gratti.App.Marking.Extensions;
 using System.Text;
 using System.Security.Cryptography.Pkcs;
 using Gratti.App.Marking.Core.Interfaces;
+using Gratti.App.Marking.Utils;
 
 namespace Gratti.App.Marking.Services
 {
@@ -65,20 +66,21 @@ namespace Gratti.App.Marking.Services
 
         public TokenAuthModel Connect(X509Certificate2 cert, TokenModel tokenResponse)
         {
-            // данные для подписи
-            var content = new ContentInfo(Encoding.UTF8.GetBytes(tokenResponse.Data));
-            var signedCms = new SignedCms(content, false);
+            //// данные для подписи
+            //var content = new ContentInfo(Encoding.UTF8.GetBytes(tokenResponse.Data));
+            //var signedCms = new SignedCms(content, false);
 
 
-            // настраиваем сертификат для подлиси, добавляем дату
-            var signer = new CmsSigner(SubjectIdentifierType.IssuerAndSerialNumber, cert);
-            signer.SignedAttributes.Add(new Pkcs9SigningTime(DateTime.Now));
+            //// настраиваем сертификат для подписи, добавляем дату
+            //var signer = new CmsSigner(SubjectIdentifierType.IssuerAndSerialNumber, cert);
+            //signer.SignedAttributes.Add(new Pkcs9SigningTime(DateTime.Now));
 
-            // формируем подпись
-            signedCms.ComputeSignature(signer, false);
-            byte[] sign = signedCms.Encode();
+            //// формируем подпись
+            //signedCms.ComputeSignature(signer, false);
+            //byte[] sign = signedCms.Encode();
 
-            TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Convert.ToBase64String(sign) };
+            //TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Convert.ToBase64String(sign) };
+            TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Certificate.SignByCertificate(cert, tokenResponse.Data) };
 
             TokenAuthModel result = null;
             using (HttpClient client = new HttpClient())
@@ -92,18 +94,24 @@ namespace Gratti.App.Marking.Services
             return result;
         }
 
-        public void Connect()
+        public X509Certificate2 GetCertificate()
         {
             if (string.IsNullOrEmpty(profile.ThumbPrint))
                 throw new Exception("Не указан сертификат");
 
+            logger?.Log("Выбор сертификата...");
+            X509Certificate2 result = Utils.Certificate.GetCertificate(profile.ThumbPrint);
 
-            logger?.Log("Выбор сертификата для авторизации...");
-            X509Certificate2 cert = Utils.Certificate.GetCertificate(profile.ThumbPrint);
-
-            if (cert == null)
+            if (result == null)
                 throw new Exception("Сертификат не найден");
 
+            if (!result.Verify())
+                throw new Exception("Сертификат не валидный!");
+            return result;
+        }
+
+        public void Connect()
+        {
             logger?.Log("Получение токена...");
             TokenModel tokenResponse = GetTokenResponse();
 
@@ -111,7 +119,7 @@ namespace Gratti.App.Marking.Services
 
             logger?.Log("Авторизация...");
 
-            omsToken = Connect(cert, tokenResponse);
+            omsToken = Connect(GetCertificate(), tokenResponse);
 
             logger?.Log("Token получен...");
         }

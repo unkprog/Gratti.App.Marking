@@ -77,7 +77,10 @@
     <Compile Include="Model\CodesModel.cs" />
     <Compile Include="Model\DataMatrixModel.cs" />
     <Compile Include="Model\OrderInfoModel.cs" />
+    <Compile Include="Model\OrderNewModel.cs" />
+    <Compile Include="Model\OrderNewProductModel.cs" />
     <Compile Include="Model\OrderProductInfoModel.cs" />
+    <Compile Include="Model\OrderResultModel.cs" />
     <Compile Include="Model\OrdersModel.cs" />
     <Compile Include="Model\PoolInfoModel.cs" />
     <Compile Include="Model\ProductModel.cs" />

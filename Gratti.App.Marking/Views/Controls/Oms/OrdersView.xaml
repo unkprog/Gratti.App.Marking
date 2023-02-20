@@ -110,6 +110,7 @@
             <Button Width="100" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"  >
                 <TextBlock Text="Распечатать все доступные" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
+            <Button Width="100" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}" />
 
         </StackPanel>
     </Grid>

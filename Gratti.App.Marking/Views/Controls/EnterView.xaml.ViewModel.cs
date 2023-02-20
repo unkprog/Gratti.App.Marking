@@ -42,6 +42,10 @@ namespace Gratti.App.Marking.Views.Controls.Models
             {
                 this.RaiseAndSetIfChanged(ref currentProfile, value);
                 CurrentCertificate = Certificates.FirstOrDefault(f => f.ThumbPrint == currentProfile.ThumbPrint);
+                this.RaisePropertyChanged("OmsId");
+                this.RaisePropertyChanged("ConnectionId");
+                this.RaisePropertyChanged("ApiKey");
+                this.RaisePropertyChanged("SqlConnectionString");
             }
         }
 
@@ -213,10 +217,10 @@ namespace Gratti.App.Marking.Views.Controls.Models
         {
             App.Self.MainVM.RunAsync(() =>
             {
-                App.Self.SetProfile(CurrentProfile);
-                ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
-                Log("Test " + product.Name);
-
+                //App.Self.SetProfile(CurrentProfile);
+                //ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
+                //Log("Test " + product.Name);
+                SyncThread(() => App.Self.MainVM.Content = new Oms.OrderNewView());
             });
         }
 
