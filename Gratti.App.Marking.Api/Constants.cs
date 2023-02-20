@@ -19,5 +19,23 @@ namespace Gratti.App.Marking.Api
         public const string cistype_set = "Набор";
         public const string cistype_group = "Групповая упаковка";
 
+        public const string serialnumertype_self_made = "Самостоятельно";
+        public const string serialnumertype_operator = "Оператором ИС";
+
+
+        public const string releasemethodtype_production = "Производство РФ";
+        public const string releasemethodtype_import = "Импорт в РФ";
+        public const string releasemethodtype_remains = "Остатки";
+        public const string releasemethodtype_crossborder = "CROSSBORDER";
+        public const string releasemethodtype_remark = "REMARK";
+        public const string releasemethodtype_comission = "Комиссия";
+        public const string releasemethodtype_contract_production = "Контрактное производство";
+
+        public const string createmethodtype_self_made = "Самостоятельно";
+        public const string createmethodtype_cem = "CEM";
+        public const string createmethodtype_cm = "CM";
+        public const string createmethodtype_cl = "CL";
+        public const string createmethodtype_ca = "CA";
+
     }
 }

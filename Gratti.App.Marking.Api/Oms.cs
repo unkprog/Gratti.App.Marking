@@ -69,5 +69,11 @@ namespace Gratti.App.Marking.Api
             return Post<OrderNewModel, OrderResultModel>(clientToken, group, "/orders", order, signature);
         }
 
+        //TODO: Сделать периодический пинг для проверки сессии
+        public string Ping(string clientToken, GroupEnum group)
+        {
+            return Get<string>(clientToken, group, "/ping");
+        }
+
     }
 }

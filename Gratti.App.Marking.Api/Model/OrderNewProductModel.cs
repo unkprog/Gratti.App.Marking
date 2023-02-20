@@ -23,7 +23,9 @@ namespace Gratti.App.Marking.Api.Model
         }
         public enum SerialNumerTypeEnum
         {
+            [Display(Name = Constants.serialnumertype_self_made)]
             SELF_MADE,
+            [Display(Name = Constants.serialnumertype_operator)]
             OPERATOR
         }
 
