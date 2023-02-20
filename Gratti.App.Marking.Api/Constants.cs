@@ -1,4 +1,6 @@
-﻿namespace Gratti.App.Marking.Api
+﻿using System.Xml.Linq;
+
+namespace Gratti.App.Marking.Api
 {
     public static class Constants
     {
@@ -10,5 +12,12 @@
         public const string group_milk = "Молочная продукция";
         public const string group_water = "Упакованная вода";
         public const string group_beer = "Пиво";
+
+
+        public const string cistype_unit = "Единица товара";
+        public const string cistype_bundle = "Комплект";
+        public const string cistype_set = "Набор";
+        public const string cistype_group = "Групповая упаковка";
+
     }
 }

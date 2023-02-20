@@ -68,7 +68,7 @@
             <TextBlock Grid.Row="14" Text="Количество кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
             <TextBox Grid.Row="14" Grid.Column="2" Text="{Binding Path=Product.Quantity, Mode=TwoWay}" tbxh:TextBoxHelper.OnlyNumeric="Int" tbxh:TextBoxHelper.DefaultValue="1"/>
             <TextBlock Grid.Row="16" Text="Тип кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
-            <ComboBox Grid.Row="16" Grid.Column="2" ItemsSource="{Binding CisTypeValues}" SelectedValuePath="Product.CisType" Background="White" />
+            <ComboBox Grid.Row="16" Grid.Column="2" ItemsSource="{Binding CisTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Product.CisType}" Background="White" />
         </Grid>
         <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="0 4 0 0" >
             <Button Width="100" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}" />

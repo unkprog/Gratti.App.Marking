@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -11,9 +12,13 @@ namespace Gratti.App.Marking.Api.Model
     {
         public enum CisTypeEnum
         {
+            [Display(Name = Constants.cistype_unit)]
             UNIT,
+            [Display(Name = Constants.cistype_bundle)]
             BUNDLE,
+            [Display(Name = Constants.cistype_set)]
             SET,
+            [Display(Name = Constants.cistype_group)]
             GROUP
         }
         public enum SerialNumerTypeEnum

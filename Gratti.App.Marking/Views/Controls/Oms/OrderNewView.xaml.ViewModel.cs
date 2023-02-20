@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Gratti.App.Marking.Core.Extensions;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
@@ -47,7 +48,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             set { this.RaiseAndSetIfChanged(ref product, value); }
         }
 
-        public IEnumerable<OrderNewProductModel.CisTypeEnum> CisTypeValues { get { return Enum.GetValues(typeof(OrderNewProductModel.CisTypeEnum)).Cast<OrderNewProductModel.CisTypeEnum>(); } }
+        public IEnumerable<EnumExtensions.ValueDisplayName> CisTypeValues { get { return EnumExtensions.GetAllValuesDisplayName(typeof(OrderNewProductModel.CisTypeEnum)); } }
 
         private void CreateOrder()
         {
