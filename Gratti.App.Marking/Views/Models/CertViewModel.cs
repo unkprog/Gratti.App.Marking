@@ -8,7 +8,7 @@ namespace Gratti.App.Marking.Views.Models
         {
             get
             {
-                return Utils.Certificate.GetCertificateInfo(App.Self.Auth.Profile.ThumbPrint);
+                return Utils.Certificate.GetCertificateInfo(App.Self.Auth?.Profile?.ThumbPrint);
             }
         }
     }
