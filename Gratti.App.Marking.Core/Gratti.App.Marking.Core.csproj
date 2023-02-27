@@ -75,6 +75,7 @@
     <Compile Include="DataMatrix\Encoder.Bitmap.cs" />
     <Compile Include="DataMatrix\Encoder.cs" />
     <Compile Include="Extensions\Enum.cs" />
+    <Compile Include="Extensions\Exception.cs" />
     <Compile Include="Extensions\HttpClient.cs" />
     <Compile Include="Extensions\Object.cs" />
     <Compile Include="Extensions\String.cs" />

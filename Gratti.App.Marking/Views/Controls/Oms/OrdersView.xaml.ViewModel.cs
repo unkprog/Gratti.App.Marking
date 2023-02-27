@@ -16,7 +16,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
-            CreateOrderCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => CreateOrder()); });
+            CreateOrderCommand = ReactiveCommand.Create(CreateOrder);
             App.Self.MainVM.RunAsync(() => Refresh());
         }
 

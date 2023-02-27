@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Security.Cryptography;
 using Gratti.App.Marking.Api.Model;
+using Gratti.App.Marking.Core.Extensions;
 
 namespace Gratti.App.Marking.Views.Controls.Models
 {
@@ -203,8 +204,9 @@ namespace Gratti.App.Marking.Views.Controls.Models
                     App.Self.Auth.Connect();
                     isConnected = true;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log(ex.GetMessages());
                     SyncThread(() => App.Self.MainVM.Error("Не удалось подключиться! " + Environment.NewLine + "Проверьте настройки."));
                 }
                 if (isConnected)
@@ -217,7 +219,7 @@ namespace Gratti.App.Marking.Views.Controls.Models
         {
             App.Self.MainVM.RunAsync(() =>
             {
-                //App.Self.SetProfile(CurrentProfile);
+                App.Self.SetProfile(CurrentProfile);
                 //ProductModel product = App.Self.CmgApi.ProductByGtin("04610166508225");
                 //Log("Test " + product.Name);
                 SyncThread(() => App.Self.MainVM.Content = new Oms.OrderNewView());

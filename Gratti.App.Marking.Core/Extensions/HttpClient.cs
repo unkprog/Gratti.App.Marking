@@ -54,7 +54,12 @@ namespace Gratti.App.Marking.Extensions
         public static async Task<R> PostAsJsonAsync<T, R>(this HttpClient httpClient, string url, T data)
         {
             R result;
-            var dataAsString = JsonSerializer.Serialize(data);
+            JsonSerializerOptions opts = new JsonSerializerOptions();
+            opts.Converters.Add(new JsonStringEnumConverter());
+            opts.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            string dataAsString = JsonSerializer.Serialize(data, data.GetType(), opts);
+
+            //var dataAsString = JsonSerializer.Serialize(data);
             var message = new HttpRequestMessage
             {
                 RequestUri = new Uri(httpClient.BaseAddress.OriginalString + url),

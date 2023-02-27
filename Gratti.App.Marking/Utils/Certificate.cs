@@ -5,8 +5,10 @@ using Org.BouncyCastle.Security;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Gratti.App.Marking.Extensions;
 
 namespace Gratti.App.Marking.Utils
 {
@@ -165,5 +167,41 @@ namespace Gratti.App.Marking.Utils
             return Convert.ToBase64String(sign);
         }
 
+        private static CAPICOM.ICertificate GetCertByThumbrint(string thumbprint)
+        {
+            CAdESCOM.CPStore store = (CAdESCOM.CPStore)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("7CBD72D9-76A3-4939-930C-52C4D6CA206B")));
+            store.Open();
+            foreach (CAPICOM.ICertificate certificate in store.Certificates)
+            {
+                if (certificate.Thumbprint == thumbprint)
+                {
+                    return certificate;
+                }
+            }
+            return null;
+        }
+
+        internal static string SignByCertificateCades(X509Certificate2 x509certificate, string content, bool detached = true)
+        {
+            CAPICOM.ICertificate certificate = GetCertByThumbrint(x509certificate.Thumbprint);
+            CAdESCOM.CadesSignedData obj = (CAdESCOM.CadesSignedData)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("1264A46A-FDB8-43A3-AEE3-00E1684C98E9")));
+            obj.ContentEncoding = CAdESCOM.CADESCOM_CONTENT_ENCODING_TYPE.CADESCOM_BASE64_TO_BINARY;
+            obj.Content = Convert.ToBase64String(Encoding.ASCII.GetBytes(content));
+            CAdESCOM.CadesSignedData signed = obj;
+            CAdESCOM.CPSigner obj2 = (CAdESCOM.CPSigner)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("94EBF679-1DED-48B9-9FD2-00A3949E0905")));
+            obj2.Options = CAPICOM.CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN;
+            obj2.CheckCertificate = true;
+            obj2.Certificate = certificate;
+            CAdESCOM.CPSigner signer = obj2;
+            CAdESCOM.CPAttributes authenticatedAttributes = signer.AuthenticatedAttributes2;
+            CAdESCOM.CPAttribute obj3 = (CAdESCOM.CPAttribute)Activator.CreateInstance(Marshal.GetTypeFromCLSID(new Guid("FE98A77F-7D50-4210-AED4-5B2AE2EDAEF1")));
+            obj3.Name = CAdESCOM.CADESCOM_ATTRIBUTE.CADESCOM_AUTHENTICATED_ATTRIBUTE_SIGNING_TIME;
+            obj3.Value = DateTime.Now;
+            authenticatedAttributes.Add(obj3);
+            string resultSign = signed.SignCades(signer, CAdESCOM.CADESCOM_CADES_TYPE.CADESCOM_CADES_BES, detached);
+            string resultNotClRf = resultSign.ReplaceLineEndings(string.Empty);
+            string result = resultNotClRf.Replace(" ", string.Empty);
+            return result;
+        }
     }
 }

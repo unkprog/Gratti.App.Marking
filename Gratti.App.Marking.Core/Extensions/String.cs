@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Text;
 
 namespace Gratti.App.Marking.Extensions
@@ -46,6 +45,13 @@ namespace Gratti.App.Marking.Extensions
 
             // Return the fully-RFC3986-escaped string.
             return escaped.ToString();
+        }
+
+        public static string ReplaceLineEndings(this string Self, string replacementText)
+        {
+           return Self.Replace("\r\n", replacementText)
+                      .Replace("\r", replacementText)
+                      .Replace("\n", replacementText);
         }
     }
 }
