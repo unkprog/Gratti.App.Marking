@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using ReactiveUI;
 using System.Reflection;
+using Gratti.App.Marking.Core.Extensions;
 
 namespace Gratti.App.Marking.Views.Models
 {
@@ -65,10 +66,7 @@ namespace Gratti.App.Marking.Views.Models
             var runCommand = ReactiveCommand.CreateFromTask(_ => Task.Run(action));
             runCommand.ThrownExceptions.Subscribe((ex) =>
              {
-                 string msg = ex.Message;
-                 if (ex.InnerException != null)
-                     msg = string.Concat(msg, Environment.NewLine, ex.InnerException.Message);
-                 Error(msg);
+                 Error(ex.GetMessages());
                  Busy(false, true);
              });
             runCommand.IsExecuting.Subscribe(isExecuting => Busy(isExecuting));

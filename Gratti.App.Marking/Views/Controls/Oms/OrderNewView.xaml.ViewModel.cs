@@ -107,7 +107,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             string content = JsonSerializer.Serialize(order, order.GetType(), opts);
             //OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, Utils.Certificate.SignByCertificateCades(App.Self.Auth.GetCertificate(), content, true));
             //OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, Utils.Certificate.ComputeDetachedSignature(App.Self.Auth.GetCertificate(), content));
-            string signContent = Utils.Certificate.SignByCertificateCades(App.Self.Auth.GetCertificate(), content, true);
+            //string signContent = Utils.Certificate.SignByCertificateCades(App.Self.Auth.GetCertificate(), content, true);
+            string signContent = Utils.Certificate.SignByCertificateDetached(App.Self.Auth.GetCertificate(), content);
             OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, signContent);
             SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
         }
