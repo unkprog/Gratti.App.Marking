@@ -1,20 +1,20 @@
-﻿using Gratti.App.Marking.Model;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
 using Org.BouncyCastle.Security;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using Gratti.App.Marking.Extensions;
+using Gratti.App.Marking.Model;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Gratti.App.Marking.Utils
 {
-    internal static class Certificate
+    public static class Certificate
     {
-        internal static ObservableCollection<CertificateInfoModel> GetCertificatesList()
+        public static ObservableCollection<CertificateInfoModel> GetCertificatesList()
         {
             ObservableCollection<CertificateInfoModel> result = new ObservableCollection<CertificateInfoModel>();
             using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
@@ -38,7 +38,7 @@ namespace Gratti.App.Marking.Utils
             return result;
         }
 
-        internal static CertificateInfoModel GetCertificateInfo(string thumbPrint)
+        public static CertificateInfoModel GetCertificateInfo(string thumbPrint)
         {
             CertificateInfoModel result = new CertificateInfoModel()
             {
@@ -66,7 +66,8 @@ namespace Gratti.App.Marking.Utils
             }
             return result;
         }
-        internal static X509Certificate2 GetCertificate(string thumbPrint)
+
+        public static X509Certificate2 GetCertificate(string thumbPrint)
         {
             X509Certificate2 result = null;
             using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
@@ -149,7 +150,7 @@ namespace Gratti.App.Marking.Utils
         }
 
 
-        internal static string SignByCertificate(X509Certificate2 cert, string data)
+        public static string SignByCertificate(X509Certificate2 cert, string data)
         {
             // данные для подписи
             var content = new System.Security.Cryptography.Pkcs.ContentInfo(Encoding.UTF8.GetBytes(data));
@@ -204,7 +205,7 @@ namespace Gratti.App.Marking.Utils
         //    return result;
         //}
 
-        internal static string SignByCertificateDetached(X509Certificate2 cert, string data)
+        public static string SignByCertificateDetached(X509Certificate2 cert, string data)
         {
             // данные для подписи
             var content = new System.Security.Cryptography.Pkcs.ContentInfo(Encoding.UTF8.GetBytes(data));
@@ -221,6 +222,15 @@ namespace Gratti.App.Marking.Utils
             byte[] sign = signedCms.Encode();
 
             return Convert.ToBase64String(sign);
+        }
+
+        public static string SignByCertificateDetached<T>(X509Certificate2 cert, T data)
+        {
+            JsonSerializerOptions opts = new JsonSerializerOptions();
+            opts.Converters.Add(new JsonStringEnumConverter());
+            opts.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            string content = JsonSerializer.Serialize(data, data.GetType(), opts);
+            return SignByCertificateDetached(cert, content);
         }
     }
 }

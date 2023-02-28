@@ -1,15 +1,8 @@
-﻿using Gratti.App.Marking.Api;
+﻿using System.Windows;
+using Gratti.App.Marking.Api;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Services;
 using Gratti.App.Marking.Views.Models;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using System.Windows;
 
 namespace Gratti.App.Marking
 {
@@ -26,15 +19,15 @@ namespace Gratti.App.Marking
         public static App Self;
         public MainWindowViewModel MainVM { get; set; }
 
-        public AuthService Auth { get; private set; }
-        public Oms OmsApi { get; private set; }
-        public Cmg CmgApi { get; private set; }
+        public AuthService Auth => appState.Auth;
+        public Oms OmsApi => appState.OmsApi;
+        public Cmg CmgApi => appState.CmgApi;
+
+        private AppState appState = new AppState();
 
         public void SetProfile(ProfileInfoModel profile)
         {
-            Auth = new AuthService(profile, MainVM);
-            OmsApi = new Oms(profile.OmsUri, profile.OmsId);
-            CmgApi = new Cmg(profile.CmgUri, profile.ApiKey);
+            appState.SetProfile(profile, MainVM);
         }
 
     }

@@ -105,84 +105,25 @@ namespace Gratti.App.Marking.Views.Controls.Models
 
         public void LoadProfiles()
         {
-            string fileSettingsPath = IO.GetFileSettingsPath();
-
-            SettingModel setting = null;
-            if (File.Exists(fileSettingsPath))
-            {
-                string json = File.ReadAllText(fileSettingsPath);
-                setting = JsonSerializer.Deserialize<SettingModel>(json);
-            }
-            if (setting == null)
-            {
-
-                setting = new SettingModel()
-                {
-                    Dev = new ProfileInfoModel
-                    {
-                        Name = "Тестовый сервер (https://markirovka.sandbox.crptech.ru)",
-                        GisUri = "https://markirovka.sandbox.crptech.ru",
-                        OmsUri = "https://suz.sandbox.crptech.ru",
-                        CmgUri = "https://api.integrators.nk.crpt.tech"
-                    },
-                    Prod = new ProfileInfoModel
-                    {
-                        Name = "Основной сервер (https://markirovka.crpt.ru)",
-                        GisUri = "https://markirovka.crpt.ru",
-                        OmsUri = "https://suzgrid.crpt.ru",
-                        CmgUri = "https://апи.национальный-каталог.рф"
-                    },
-                    Current = "Dev"
-                };
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(setting.Dev.CmgUri))
-                    setting.Dev.CmgUri = "https://api.integrators.nk.crpt.tech";
-                if (string.IsNullOrEmpty(setting.Prod.CmgUri))
-                    setting.Prod.CmgUri = "https://апи.национальный-каталог.рф";
-            }
+            SettingModel setting = IO.GetSetting();
 
             Profiles.Add(setting.Dev);
             Profiles.Add(setting.Prod);
 
-            CurrentProfile = (setting.Current == "Dev" ? setting.Dev : setting.Prod);
+            CurrentProfile = IO.GetCurrentProfile(setting);
         }
 
         public string SaveProfiles()
         {
-            string result = string.Empty;
-
-            string fileSettingsPath = IO.GetFileSettingsPath();
-
             SettingModel setting = new SettingModel()
             {
                 Dev = Profiles[0],
                 Prod = Profiles[1],
                 Current = (CurrentProfile == Profiles[0] ? "Dev" : "Prod")
             };
-
-            var appendResult = new Action<string>((msg) =>
-            {
-                result = string.Concat(result, string.IsNullOrEmpty(result) ? string.Empty : Environment.NewLine, msg);
-            });
-
-            if (string.IsNullOrEmpty(CurrentProfile.ThumbPrint))
-                appendResult("Выберите сертификат");
-            if (string.IsNullOrEmpty(CurrentProfile.OmsId))
-                appendResult("Укажите идентификатор СУЗ (Oms Id)");
-            if (string.IsNullOrEmpty(CurrentProfile.ConnectionId))
-                appendResult("Укажите идентификатор подключения (Connection Id)");
-            if (string.IsNullOrEmpty(CurrentProfile.ApiKey))
-                appendResult("Укажите ключ API ГИСМТ (ApiKey)");
-
-            if (string.IsNullOrEmpty(CurrentProfile.SqlConnectionString))
-                appendResult("Укажите строку подключения SQL");
-
-            JavaScriptEncoder encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.Cyrillic);
-            string json = JsonSerializer.Serialize(setting, new JsonSerializerOptions { WriteIndented = true, Encoder = encoder });
-            File.WriteAllText(fileSettingsPath, json);
-            return result;
+            IO.SetSetting(setting);
+            
+            return IO.VerifytProfile(CurrentProfile);
         }
 
         private void Enter()

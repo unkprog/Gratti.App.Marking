@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{329F15AF-CB99-4377-8130-8D4B8CC08E2F}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>Gratti.App.Marking.Cmd</RootNamespace>
+    <AssemblyName>Gratti.App.Marking.Cmd</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Gratti.App.Marking.Api\Gratti.App.Marking.Api.csproj">
+      <Project>{55958821-3FB7-4E81-87F3-F36EB869F1B3}</Project>
+      <Name>Gratti.App.Marking.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gratti.App.Marking.Base\Gratti.App.Marking.Base.csproj">
+      <Project>{105cb25a-7215-4e6d-bd0c-774bf3943e36}</Project>
+      <Name>Gratti.App.Marking.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gratti.App.Marking.Core\Gratti.App.Marking.Core.csproj">
+      <Project>{AE2D587C-6280-4960-B599-17D0A35D6D61}</Project>
+      <Name>Gratti.App.Marking.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gratti.App.Marking.Model\Gratti.App.Marking.Model.csproj">
+      <Project>{444A8231-EDBE-4E2F-887D-BB461BE0BCE6}</Project>
+      <Name>Gratti.App.Marking.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

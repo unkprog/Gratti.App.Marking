@@ -5,8 +5,6 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using Gratti.App.Marking.Model;
 using Gratti.App.Marking.Extensions;
-using System.Text;
-using System.Security.Cryptography.Pkcs;
 using Gratti.App.Marking.Core.Interfaces;
 using Gratti.App.Marking.Utils;
 
@@ -33,7 +31,6 @@ namespace Gratti.App.Marking.Services
             if (omsToken == null || ((DateTime.Now - omsToken.Date).TotalHours > 2))
             {
                 Connect();
-               //omsToken = Identity?.GetOmsTokenAsync(Certificate, Current.GisUri, ConnId).Result;
             }
 
             return omsToken?.Token;
@@ -55,34 +52,25 @@ namespace Gratti.App.Marking.Services
         {
             TokenModel result = null;
 
-            using (HttpClient client = new HttpClient())
+            logger?.Log("Получение тоткена...");
+            using (HttpClient client = GetHttpClient())
             {
                 client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/key"));
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 result = client.GetJson<TokenModel>("");
             }
+            logger?.Log("Токен для авторизации получен (UUID: " + result.UUID + ", Data:" + result.Data + ")...");
             return result;
         }
 
         public TokenAuthModel Connect(X509Certificate2 cert, TokenModel tokenResponse)
         {
-            //// данные для подписи
-            //var content = new ContentInfo(Encoding.UTF8.GetBytes(tokenResponse.Data));
-            //var signedCms = new SignedCms(content, false);
+            logger?.Log("Подключение...");
 
-
-            //// настраиваем сертификат для подписи, добавляем дату
-            //var signer = new CmsSigner(SubjectIdentifierType.IssuerAndSerialNumber, cert);
-            //signer.SignedAttributes.Add(new Pkcs9SigningTime(DateTime.Now));
-
-            //// формируем подпись
-            //signedCms.ComputeSignature(signer, false);
-            //byte[] sign = signedCms.Encode();
-
-            //TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Convert.ToBase64String(sign) };
             TokenModel tokenRequest = new TokenModel() { UUID = tokenResponse.UUID, Data = Certificate.SignByCertificate(cert, tokenResponse.Data) };
 
             TokenAuthModel result = null;
+            
             using (HttpClient client = new HttpClient())
             {
                 client.BaseAddress = new Uri(string.Concat(profile.GisUri, "/api/v3/auth/cert/" + profile.ConnectionId));
@@ -90,6 +78,8 @@ namespace Gratti.App.Marking.Services
                 result = client.PostJson<TokenModel, TokenAuthModel>("", tokenRequest);
                 result.Date = DateTime.Now;
             }
+
+            logger?.Log("Подключение завершено успешно...");
 
             return result;
         }
@@ -112,16 +102,7 @@ namespace Gratti.App.Marking.Services
 
         public void Connect()
         {
-            logger?.Log("Получение токена...");
-            TokenModel tokenResponse = GetTokenResponse();
-
-            logger?.Log("Токен для авторизации получен (UUID: " + tokenResponse.UUID + ", Data:" + tokenResponse.Data + ")...");
-
-            logger?.Log("Авторизация...");
-
-            omsToken = Connect(GetCertificate(), tokenResponse);
-
-            logger?.Log("Token получен...");
+            omsToken = Connect(GetCertificate(), GetTokenResponse());
         }
 
     }

@@ -101,14 +101,8 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             //    return;
             //}
 
-            JsonSerializerOptions opts = new JsonSerializerOptions();
-            opts.Converters.Add(new JsonStringEnumConverter());
-            opts.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-            string content = JsonSerializer.Serialize(order, order.GetType(), opts);
-            //OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, Utils.Certificate.SignByCertificateCades(App.Self.Auth.GetCertificate(), content, true));
-            //OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, Utils.Certificate.ComputeDetachedSignature(App.Self.Auth.GetCertificate(), content));
-            //string signContent = Utils.Certificate.SignByCertificateCades(App.Self.Auth.GetCertificate(), content, true);
-            string signContent = Utils.Certificate.SignByCertificateDetached(App.Self.Auth.GetCertificate(), content);
+
+            string signContent = Utils.Certificate.SignByCertificateDetached(App.Self.Auth.GetCertificate(), Order);
             OrderResultModel orderResult = App.Self.OmsApi.PostOrder(App.Self.Auth.OmsToken, Api.GroupEnum.lp, Order, signContent);
             SyncThread(() => App.Self.MainVM.Content = new Oms.OrdersView());
         }

@@ -135,10 +135,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Services\AuthService.cs" />
-    <Compile Include="Services\DataService.cs" />
-    <Compile Include="Utils\Certificate.cs" />
-    <Compile Include="Utils\IO.cs" />
     <Compile Include="Utils\TextBoxHelper.cs" />
     <Compile Include="Views\Controls\EnterView.xaml.cs">
       <DependentUpon>EnterView.xaml</DependentUpon>
@@ -234,6 +230,10 @@
     <ProjectReference Include="..\Gratti.App.Marking.Api\Gratti.App.Marking.Api.csproj">
       <Project>{55958821-3FB7-4E81-87F3-F36EB869F1B3}</Project>
       <Name>Gratti.App.Marking.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Gratti.App.Marking.Base\Gratti.App.Marking.Base.csproj">
+      <Project>{105cb25a-7215-4e6d-bd0c-774bf3943e36}</Project>
+      <Name>Gratti.App.Marking.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Gratti.App.Marking.Core\Gratti.App.Marking.Core.csproj">
       <Project>{ae2d587c-6280-4960-b599-17d0a35d6d61}</Project>
