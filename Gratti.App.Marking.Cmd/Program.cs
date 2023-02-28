@@ -17,7 +17,7 @@ namespace Gratti.App.Marking.Cmd
             Console.WriteLine("Версия: " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
             Console.WriteLine("----------------------------------------------------------------------");
             Console.WriteLine("");
-            if (args == null)
+            if (args == null || args.Length == 0)
             {
                 logger.Log("Не заданы параметры коммандной строки!");
                 Console.Beep();

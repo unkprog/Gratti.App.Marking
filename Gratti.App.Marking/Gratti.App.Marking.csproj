@@ -235,6 +235,10 @@
       <Project>{105cb25a-7215-4e6d-bd0c-774bf3943e36}</Project>
       <Name>Gratti.App.Marking.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Gratti.App.Marking.Cmd\Gratti.App.Marking.Cmd.csproj">
+      <Project>{329f15af-cb99-4377-8130-8d4b8cc08e2f}</Project>
+      <Name>Gratti.App.Marking.Cmd</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gratti.App.Marking.Core\Gratti.App.Marking.Core.csproj">
       <Project>{ae2d587c-6280-4960-b599-17d0a35d6d61}</Project>
       <Name>Gratti.App.Marking.Core</Name>
