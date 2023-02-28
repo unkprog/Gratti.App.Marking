@@ -19,7 +19,9 @@ namespace Gratti.App.Marking.Cmd
             Console.WriteLine("");
             if (args == null)
             {
-                logger.Log("Не заданы параметры!");
+                logger.Log("Не заданы параметры коммандной строки!");
+                Console.Beep();
+                Console.ReadKey();
                 return;
             }
 
