@@ -47,6 +47,8 @@
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
@@ -58,7 +60,23 @@
             <TextBlock Text="{Binding Certificate.Name}" FontSize="16" FontWeight="Bold"/>
             <TextBlock Text="{Binding Certificate.INNStr}" FontSize="14" />
         </StackPanel>
-        <DataGrid x:Name="OrdersDataGrid" Margin="0 4 0 0" Grid.Row="1" ItemsSource="{Binding Orders}" SelectedItem="{Binding CurrentOrderInfo}">
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 0 0" Orientation="Horizontal" >
+            <Button Width="200" Content="Обновить" Margin="0 4 4 0" Command="{Binding RefreshCommand}" />
+            <Button Width="200" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"  >
+                <TextBlock Text="Распечатать все доступные" TextWrapping="Wrap" TextAlignment="Center"/>
+            </Button>
+            <Button Width="200" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}"  />
+        </StackPanel>
+        <Grid  Grid.Row="2" Margin="0 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox Width="200" Grid.Column="0" Content="Обновлять раз в 15 секунд" Margin="0" IsChecked="{Binding IsAutoRefresh}"/>
+            <CheckBox Width="200" Grid.Column="1" Content="Доступные для печати" Margin="6 0 0 0" IsChecked="{Binding IsPrintAvalaible}"/>
+        </Grid>
+        <DataGrid x:Name="OrdersDataGrid" Margin="0 4 0 0" Grid.Row="3" ItemsSource="{Binding OrdersView}" SelectedItem="{Binding CurrentOrderInfo}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Дата" Width="120" Binding="{Binding CreatedDateTimeStr}" ElementStyle="{StaticResource DataGridDateStyle}"/>
                 <DataGridTextColumn Header="Идентификатор" Width="250" Binding="{Binding OrderId}" ElementStyle="{StaticResource DataGridTextStyle}"/>
@@ -69,7 +87,7 @@
                 <DataGridTextColumn Header="Статус" Width="150" Binding="{Binding OrderStatusText}" ElementStyle="{StaticResource DataGridCenterText}"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Grid Margin="0 4 0 0" Grid.Row="2">
+        <Grid Margin="0 4 0 0" Grid.Row="4">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -88,7 +106,7 @@
                 <TextBlock Grid.Column="1" Text="{Binding ElementName=OrdersDataGrid, Path=DataContext.CurrentOrderInfo.OrderId}" Margin="5 0 0 0"  VerticalAlignment="Center"/>
                 <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="3">
                     <Button Width="200" Content="Распечатать 1 код маркировки" IsEnabled="{Binding IsCurrentBufferInfo}" VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintOneCurrentOrderInfoCommand}"/>
-                    <Button Width="200" Content="Распечатать все доступные" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
+                    <Button Width="200" Content="Распечатать все доступные" IsEnabled="{Binding IsCurrentAvalaibleOrder}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.PrintAllAvalaibleCurrentOrderInfoCommand}"/>
                     <!--<Button Width="200" Content="Проверка инфо" IsEnabled="{Binding IsCurrentBufferInfo}" Margin="15 0 0 0"  VerticalAlignment="Center" Command="{Binding ElementName=OrdersDataGrid, Path=DataContext.CheckCurrentOrderInfoCommand}"/>-->
                 </StackPanel>
             </Grid>
@@ -105,13 +123,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="0 4 0 0" >
-            <Button Width="100" Content="Обновить" Margin="4 4 4 0" Command="{Binding RefreshCommand}" />
-            <Button Width="100" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"  >
-                <TextBlock Text="Распечатать все доступные" TextWrapping="Wrap" TextAlignment="Center"/>
-            </Button>
-            <Button Width="100" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}" />
 
-        </StackPanel>
     </Grid>
 </UserControl>

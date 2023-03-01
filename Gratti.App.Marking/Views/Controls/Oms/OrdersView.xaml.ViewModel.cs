@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
-using Gratti.App.Marking.Api.Model;
-using Gratti.App.Marking.Model;
-using Gratti.App.Marking.Views.Models;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Reactive;
 using ReactiveUI;
-using System.Reactive.Linq;
+using Gratti.App.Marking.Core.Extensions;
+using Gratti.App.Marking.Api.Model;
+using Gratti.App.Marking.Views.Models;
 
 namespace Gratti.App.Marking.Views.Controls.Oms.Models
 {
@@ -28,6 +32,34 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
         public ReactiveCommand<Unit, Unit> CreateOrderCommand { get; }
 
+        private bool isAutoRefresh = true;
+        public bool IsAutoRefresh
+        {
+            get { return isAutoRefresh; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref isAutoRefresh, value);
+                if (value)
+                    StartRefreshTimer();
+                else
+                    CancelRefreshTimer();
+            }
+        }
+
+
+        private bool isPrintAvalaible = true;
+        public bool IsPrintAvalaible
+        {
+            get { return isPrintAvalaible; }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref isPrintAvalaible, value);
+                this.RaisePropertyChanged("IsAvalaibleOrders");
+                this.RaisePropertyChanged("OrdersView");
+            }
+        }
+        
+
         private List<OrderInfoModel> orders;
         public List<OrderInfoModel> Orders
         {
@@ -35,8 +67,14 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             set
             {
                 this.RaiseAndSetIfChanged(ref orders, value);
+                this.RaisePropertyChanged("OrdersView");
                 this.RaisePropertyChanged("IsAvalaibleOrders");
             }
+        }
+
+        public IEnumerable<OrderInfoModel> OrdersView
+        {
+            get { return (IsPrintAvalaible ? (orders == null ? null : orders.Where(f=> f.TotalAvailableCodes > 0)) : orders); }
         }
 
         public bool IsAvalaibleOrders
@@ -49,7 +87,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public OrderInfoModel CurrentOrderInfo
         {
             get { return currentOrderInfo; }
-            set { this.RaiseAndSetIfChanged(ref currentOrderInfo, value); }
+            set
+            {
+                this.RaiseAndSetIfChanged(ref currentOrderInfo, value);
+                this.RaisePropertyChanged("IsCurrentAvalaibleOrder");
+                this.RaisePropertyChanged("IsCurrentBufferInfo");
+            }
         }
 
         private BufferInfoModel currentBufferInfo;
@@ -63,38 +106,56 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             }
         }
 
-        public bool IsCurrentBufferInfo
+        public bool IsCurrentAvalaibleOrder
         {
-            get { return currentBufferInfo != null; }
+            get { return currentOrderInfo != null && currentOrderInfo.TotalAvailableCodes > 0; }
         }
 
-        
+        public bool IsCurrentBufferInfo
+        {
+            get { return currentBufferInfo != null && currentBufferInfo.AvailableCodes > 0; }
+        }
 
+        private bool isRefreshing = false;
         public void Refresh()
         {
-            Log("Получение списка заказов...");
-            SyncThread(() => App.Self.MainVM.TextBusy = "Получение списка заказов...");
-            OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
-            ordersResponse.Orders.Sort((x, y) => { return y.CreatedDateTime.CompareTo(x.CreatedDateTime); });
+            if (isRefreshing)
+                return;
 
-            foreach (OrderInfoModel order in ordersResponse.Orders)
+            try
             {
-                Dictionary<string, OrderProductInfoModel> productItems = App.Self.OmsApi.GetOrderProductInfo(App.Self.Auth.OmsToken, Api.GroupEnum.lp, order.OrderId);
-                foreach (BufferInfoModel buffer in order.Buffers)
+                isRefreshing = true;
+                Log("Получение списка заказов...");
+                SyncThread(() => App.Self.MainVM.TextBusy = "Получение списка заказов...");
+                OrdersModel ordersResponse = App.Self.OmsApi.GetOrders(App.Self.Auth.OmsToken, Api.GroupEnum.lp);
+                ordersResponse.Orders.Sort((x, y) => { return y.CreatedDateTime.CompareTo(x.CreatedDateTime); });
+
+                foreach (OrderInfoModel order in ordersResponse.Orders)
                 {
-                    OrderProductInfoModel product;
-                    if (productItems.TryGetValue(buffer.Gtin, out product))
+                    Dictionary<string, OrderProductInfoModel> productItems = App.Self.OmsApi.GetOrderProductInfo(App.Self.Auth.OmsToken, Api.GroupEnum.lp, order.OrderId);
+                    foreach (BufferInfoModel buffer in order.Buffers)
                     {
-                        buffer.ProductInfo = product;
+                        OrderProductInfoModel product;
+                        if (productItems.TryGetValue(buffer.Gtin, out product))
+                        {
+                            buffer.ProductInfo = product;
+                        }
                     }
                 }
-            }
-            SyncThread(() => {
-                this.Orders = ordersResponse.Orders;
-                if (this.Orders.Count > 0)
-                    this.CurrentOrderInfo = this.Orders[0];
+                SyncThread(() =>
+                {
+                    this.Orders = ordersResponse.Orders;
+                    if (this.OrdersView.Count() > 0)
+                        this.CurrentOrderInfo = this.OrdersView.ElementAt(0);
                 });
-            Log("Получено заказов: " + this.Orders.Count.ToString() + "...");
+            }
+            finally
+            {
+                isRefreshing = false;
+                Log("Получено заказов: " + this.Orders?.Count.ToString() + "...");
+            }
+            if (cts == null && isAutoRefresh)
+                StartRefreshTimer();
         }
 
         private void PrintAllOrderInfo()
@@ -183,73 +244,46 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         }
 
 
-        // https://xn--j1ab.xn----7sbabas4ajkhfocclk9d3cvfsa.xn--p1ai/rest/tabs/goods/175630239
-        // x-csrf-token: z7u81ueznjbtabmbxlqn8vbz95yy1o8zjz826ryhhn7fufe06zlrbawe7349hj8r
+        private async Task TaskDelayAsync(CancellationToken ct)
+        {
+            int i = 0;
+            while (true)
+            {
+               
+                if (ct.IsCancellationRequested)
+                {
+                    break;
+                }
+                await Task.Delay(500);
+                i++;
+                if (i >= 30)
+                {
+                    i = 0;
+                    RefreshCommand.Execute().Subscribe();
+                }
+            }
+        }
 
+        private CancellationTokenSource cts;
 
-//        {
-//  "pageSize": 10,
-//  "pageNumber": 1,
-//  "sort": {
-//    "field": "created",
-//    "direction": "DESC"
-//  },
-//  "fields": [
-//    "type",
-//    "photo",
-//    "created",
-//    "gtin",
-//    "name",
-//    "category",
-//    "packages",
-//    "brand",
-//    "markingCondition",
-//    "status"
-//  ],
-//  "filter": {
-//    "gtin": [
-//      "04603702421225"
-//    ]
-//    }
-//}
+        public async Task StartRefreshTimer()
+        {
+            cts = new CancellationTokenSource();
+            try
+            {
+                await TaskDelayAsync(cts.Token);
+            }
+            catch (Exception ex)
+            {
+                Log(ex.GetMessages());
+            }
+            cts = null;
+        }
 
-
-
-
-
-//        {
-//  "data": [
-//    {
-//      "goods": {
-//        "id": 175630239,
-//        "goodId": 175630239,
-//        "status": "published",
-//        "link": "https://национальный-каталог.рф/product/4603702421225-ru-kurtka-zhenskaya",
-//        "preVersion": 0,
-//        "indexing": 0,
-//        "isMarking": true,
-//        "type": "unit",
-//        "photo": {
-//          "url": "",
-//          "previewUrl": ""
-//        },
-//        "created": "2023-02-10T10:55:28+03:00",
-//        "gtin": "4603702421225",
-//        "name": "Куртка женская",
-//        "category": "Одежда",
-//        "packages": [],
-//        "brand": "21208",
-//        "markingCondition": "turn"
-//      },
-//      "draft": null
-//    }
-//  ],
-//  "isGs1Loads": true,
-//  "totalObjects": 1,
-//  "totalPages": 1
-//}
-
-
+        public void CancelRefreshTimer()
+        {
+            cts?.Cancel();
+        }
 
 
     }
