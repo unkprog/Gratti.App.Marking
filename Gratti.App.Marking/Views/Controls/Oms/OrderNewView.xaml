@@ -10,11 +10,13 @@
     <Grid Margin="4">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <StackPanel Margin="16 0" Grid.ColumnSpan="2" DataContext="{Binding}">
             <TextBlock Text="{Binding Certificate.Name}" FontSize="16" FontWeight="Bold"/>
@@ -52,29 +54,29 @@
                     <TextBlock Text="Общие данные" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
                 </Border>
                 <TextBlock Grid.Row="2" Text="Товарная группа" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <ComboBox Grid.Row="2" IsEnabled="False"  Grid.Column="2" ItemsSource="{Binding GroupValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Group}" VerticalContentAlignment="Center" />
+                <ComboBox Grid.Row="2" Grid.Column="2" IsEnabled="False" ItemsSource="{Binding GroupValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Group}" VerticalContentAlignment="Center" />
                 <TextBlock Grid.Row="4" Text="№ производственнного заказа" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <TextBox Grid.Row="4" Grid.Column="2" Text="{Binding Order.ProductionOrderId}" VerticalContentAlignment="Center" />
                 <TextBlock Grid.Row="6" Text="Способ выпуска" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox Grid.Row="6" Grid.Column="2" ItemsSource="{Binding ReleaseMethodTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Order.ReleaseMethodType}" Background="White" VerticalContentAlignment="Center" />
-                <ComboBox Grid.Row="6" Grid.Column="4" ItemsSource="{Binding CreateMethodTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Order.CreateMethodType}"  Background="White" VerticalContentAlignment="Center" />
+                <ComboBox Grid.Row="6" Grid.Column="4" IsEnabled="False" ItemsSource="{Binding CreateMethodTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Order.CreateMethodType}"  Background="White" VerticalContentAlignment="Center" />
                 <ComboBox Visibility="Collapsed" Grid.Row="8" Grid.Column="2" Text="" Background="White" VerticalContentAlignment="Center" />
 
                 <Border Grid.Row="10" Grid.ColumnSpan="5" Background="#FF6F6F6F" >
                     <TextBlock Text="Товары" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"/>
                 </Border>
                 <TextBlock Grid.Row="12" Text="Код товара (GTIN)" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <TextBox Grid.Row="12" Grid.Column="2" Text="{Binding Product.Gtin}" VerticalContentAlignment="Center" />
-                <Button Grid.Row="12" Grid.Column="4" Content="Выбрать" Command="{Binding SelectGTINCommand}"/>
+                <TextBox Grid.Row="12" Grid.Column="2" Text="{Binding Gtin}" VerticalContentAlignment="Center" />
+                <Button Grid.Row="12" Grid.Column="4" Content="Выбрать" Command="{Binding SelectGTINCommand}" IsEnabled="False"/>
                 <TextBlock Grid.Row="14" Text="Количество кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <TextBox Grid.Row="14" Grid.Column="2" Text="{Binding Path=Product.Quantity, Mode=TwoWay}" tbxh:TextBoxHelper.OnlyNumeric="Int" VerticalContentAlignment="Center" />
                 <TextBlock Grid.Row="16" Text="Тип кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox Grid.Row="16" Grid.Column="2" ItemsSource="{Binding CisTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Product.CisType}" Background="White" VerticalContentAlignment="Center" />
             </Grid>
         </ScrollViewer>
-        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="0 4 0 0" >
-            <Button Width="100" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}" />
-            <Button Width="100" Content="Отменить" Margin="4 4 4 0" Command="{Binding CancelCommand}" />
+        <StackPanel Grid.Row="2" Margin="0 4"  Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Width="200" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}" IsEnabled="{Binding IsEnableOrderCreate}" />
+            <Button Width="200" Content="Отменить" Margin="4 4 4 0" Command="{Binding CancelCommand}" />
         </StackPanel>            
     </Grid>
 </UserControl>

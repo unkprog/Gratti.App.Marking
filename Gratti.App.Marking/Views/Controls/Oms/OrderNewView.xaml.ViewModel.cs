@@ -69,6 +69,35 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
             set { this.RaiseAndSetIfChanged(ref group, value); }
         }
 
+        public bool IsEnableOrderCreate { 
+            get => (!string.IsNullOrEmpty(product?.Gtin) && product?.Quantity > 0 && Product.Gtin.Length == 14);
+        }
+
+        public string Gtin
+        {
+            get { return product?.Gtin; }
+            set
+            {
+                if (product != null)
+                    product.Gtin = value;
+                this.RaisePropertyChanged("Gtin");
+                this.RaisePropertyChanged("IsEnableOrderCreate");
+            }
+        }
+
+        public int Quantity
+        {
+            get { return (product != null ? product.Quantity : 0); }
+            set
+            {
+                if (product != null)
+                    product.Quantity = value;
+                this.RaisePropertyChanged("Quantity");
+                this.RaisePropertyChanged("IsEnableOrderCreate");
+            }
+        }
+
+        
         public IEnumerable<EnumExtensions.ValueDisplayName> GroupValues { get { return EnumExtensions.GetAllValuesDisplayName(typeof(GroupEnum)); } }
 
         public IEnumerable<EnumExtensions.ValueDisplayName> ReleaseMethodTypeValues { get { return EnumExtensions.GetAllValuesDisplayName(typeof(OrderNewModel.ReleaseMethodTypeEnum)); } }
@@ -86,6 +115,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
             if (string.IsNullOrEmpty(Product.Gtin))
                 appendResult("Укажите код товара (GTIN)");
+            else
+            {
+                if(Product.Gtin.Length != 14)
+                    appendResult("Код товара (GTIN) должен быть 14 сивмовлов");
+            }
+
             if (Product.Quantity < 1)
                 appendResult("Укажите количество кодов");
 
@@ -94,12 +129,12 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
         private void CreateOrder()
         {
-            //string errorMessage = VerifyCreateOrder();
-            //if (!string.IsNullOrEmpty(errorMessage))
-            //{
-            //    App.Self.MainVM.Error(errorMessage, "Создание заказа");
-            //    return;
-            //}
+            string errorMessage = VerifyCreateOrder();
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                App.Self.MainVM.Error(errorMessage, "Создание заказа");
+                return;
+            }
 
 
             string signContent = Utils.Certificate.SignByCertificateDetached(App.Self.Auth.GetCertificate(), Order);
