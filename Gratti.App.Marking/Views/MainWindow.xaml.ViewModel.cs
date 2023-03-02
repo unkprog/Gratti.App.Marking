@@ -66,8 +66,12 @@ namespace Gratti.App.Marking.Views.Models
             var runCommand = ReactiveCommand.CreateFromTask(_ => Task.Run(action));
             runCommand.ThrownExceptions.Subscribe((ex) =>
              {
-                 Error(ex.GetMessages());
+                 if (errorAction == null)
+                     Error(ex.GetMessages());
+                 else
+                     errorAction.Invoke(ex);
                  Busy(false, true);
+
              });
             runCommand.IsExecuting.Subscribe(isExecuting => Busy(isExecuting));
             runCommand.Execute().Subscribe();

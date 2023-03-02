@@ -17,6 +17,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         public OrdersViewModel()
         {
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
+            RefreshCommandAsync = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh(), (ex) => Log(ex.GetMessages())); });
             PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()); });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
@@ -25,6 +26,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         }
 
         public ReactiveCommand<Unit, Unit> RefreshCommand { get; }
+        public ReactiveCommand<Unit, Unit> RefreshCommandAsync { get; }
         public ReactiveCommand<Unit, Unit> PrintAllAvalaibleOrdersInfoCommand { get; }
         
         public ReactiveCommand<Unit, Unit> PrintOneCurrentOrderInfoCommand { get; }
@@ -260,7 +262,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 if (i >= 30)
                 {
                     i = 0;
-                    RefreshCommand.Execute().Subscribe();
+                    RefreshCommandAsync.Execute().Subscribe();
                 }
             }
         }
