@@ -196,6 +196,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
         private void CreateOrder()
         {
+            CancelRefreshTimer();
             App.Self.MainVM.Content = new Oms.OrderNewView();
         }
 

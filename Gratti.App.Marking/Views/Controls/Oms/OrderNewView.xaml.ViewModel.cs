@@ -70,7 +70,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         }
 
         public bool IsEnableOrderCreate { 
-            get => (!string.IsNullOrEmpty(product?.Gtin) && product?.Quantity > 0 && Product.Gtin.Length == 14);
+            get { return (!string.IsNullOrEmpty(Gtin) && Quantity > 0 && Gtin.Length == 14); }
         }
 
         public string Gtin

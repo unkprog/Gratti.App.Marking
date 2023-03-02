@@ -69,7 +69,7 @@
                 <TextBox Grid.Row="12" Grid.Column="2" Text="{Binding Gtin}" VerticalContentAlignment="Center" />
                 <Button Grid.Row="12" Grid.Column="4" Content="Выбрать" Command="{Binding SelectGTINCommand}" IsEnabled="False"/>
                 <TextBlock Grid.Row="14" Text="Количество кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                <TextBox Grid.Row="14" Grid.Column="2" Text="{Binding Path=Product.Quantity, Mode=TwoWay}" tbxh:TextBoxHelper.OnlyNumeric="Int" VerticalContentAlignment="Center" />
+                <TextBox Grid.Row="14" Grid.Column="2" Text="{Binding Path=Quantity, Mode=TwoWay}" tbxh:TextBoxHelper.OnlyNumeric="Int" VerticalContentAlignment="Center" />
                 <TextBlock Grid.Row="16" Text="Тип кодов" VerticalAlignment="Center" HorizontalAlignment="Right" />
                 <ComboBox Grid.Row="16" Grid.Column="2" ItemsSource="{Binding CisTypeValues}" DisplayMemberPath="DisplayName" SelectedValuePath="Value" SelectedValue="{Binding Path=Product.CisType}" Background="White" VerticalContentAlignment="Center" />
             </Grid>
