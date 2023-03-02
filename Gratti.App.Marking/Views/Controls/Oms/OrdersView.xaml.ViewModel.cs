@@ -18,7 +18,14 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
         {
             RefreshCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh()); });
             RefreshCommandAsync = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => Refresh(), (ex) => Log(ex.GetMessages())); });
-            PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()); });
+            PrintAllAvalaibleOrdersInfoCommand = ReactiveCommand.Create(() => 
+            {
+                App.Self.MainVM.RunAsync(() => PrintAllOrderInfo()
+                , (ex) => {
+                    Log(ex.GetMessages());
+                    RefreshCommand.Execute().Subscribe();
+                });
+            });
             PrintOneCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(1)); });
             PrintAllAvalaibleCurrentOrderInfoCommand = ReactiveCommand.Create(() => { App.Self.MainVM.RunAsync(() => PrintCurrentOrderInfo(-1)); });
             CreateOrderCommand = ReactiveCommand.Create(CreateOrder);
@@ -162,6 +169,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
 
         private void PrintAllOrderInfo()
         {
+            CancelRefreshTimer();
             Log("Сохрание кодов маркировки...");
             if (this.Orders == null || this.Orders.Count < 1)
             {
@@ -169,22 +177,25 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 return;
             }
 
-            foreach (OrderInfoModel order in this.Orders.Where(f=> f.TotalAvailableCodes > 0))
+            List<OrderInfoModel> ordersToPrint = new List<OrderInfoModel>(this.Orders.Where(f => f.TotalAvailableCodes > 0));
+
+            foreach (OrderInfoModel order in ordersToPrint)
             {
-                SyncThread(() => App.Self.MainVM.TextBusy = "Сохрание КМ по заказу " + CurrentOrderInfo.OrderId + "...");
+                SyncThread(() => App.Self.MainVM.TextBusy = "Сохрание КМ по заказу " + order.OrderId + "...");
 
                 foreach (BufferInfoModel buffer in order.Buffers)
                 {
                     if (buffer.AvailableCodes > 0)
                     {
-                        CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, CurrentOrderInfo.OrderId, buffer.Gtin, buffer.AvailableCodes);
+                        Log("Получение кодов маркировки по GTIN: " + buffer.Gtin + " " + buffer.AvailableCodes.ToString() + " шт...");
+                        CodesModel codes = App.Self.OmsApi.GetCodes(App.Self.Auth.OmsToken, Api.GroupEnum.lp, order.OrderId, buffer.Gtin, buffer.AvailableCodes);
                         foreach (string dmcode in codes.Codes)
                         {
                             DataMatrixModel model = new DataMatrixModel(dmcode) { ProductGroup = Api.GroupEnum.lp.ToString() };
 
                             model.Barcode = buffer.ProductInfo?.RawOrigin;
                             if (string.IsNullOrEmpty(model.Barcode))
-                                model.Barcode = CurrentOrderInfo.ProductionOrderId;
+                                model.Barcode = order.ProductionOrderId;
 
                             SaveCisTrue(App.Self.Auth.Profile.SqlConnectionString, model);
                         }
