@@ -167,7 +167,7 @@ namespace Gratti.App.Marking.Views.Controls.Oms.Models
                 return;
             }
 
-            foreach (OrderInfoModel order in this.Orders)
+            foreach (OrderInfoModel order in this.Orders.Where(f=> f.TotalAvailableCodes > 0))
             {
                 SyncThread(() => App.Self.MainVM.TextBusy = "Сохрание КМ по заказу " + CurrentOrderInfo.OrderId + "...");
 

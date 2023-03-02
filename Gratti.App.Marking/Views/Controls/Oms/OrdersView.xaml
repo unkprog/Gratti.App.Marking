@@ -62,7 +62,7 @@
         </StackPanel>
         <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0 0 0 0" Orientation="Horizontal" >
             <Button Width="200" Content="Обновить" Margin="0 4 4 0" Command="{Binding RefreshCommand}" />
-            <Button Width="200" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleCurrentOrderInfoCommand}"  >
+            <Button Width="200" Margin="4 4 4 0" IsEnabled="{Binding IsAvalaibleOrders}" Command="{Binding PrintAllAvalaibleOrdersInfoCommand}"  >
                 <TextBlock Text="Распечатать все доступные" TextWrapping="Wrap" TextAlignment="Center"/>
             </Button>
             <Button Width="200" Content="Создать заказ" Margin="4 4 4 0" Command="{Binding CreateOrderCommand}"  />
